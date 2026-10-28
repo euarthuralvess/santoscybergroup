@@ -207,7 +207,7 @@
   .atu-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:start}
   .creds{display:flex;flex-direction:column;gap:14px}
   .cred{display:flex;gap:16px;padding:18px 20px;background:var(--ink-2);border:1px solid var(--line);border-radius:12px}
-  .cred .role{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--signal);white-space:nowrap;padding-top:3px;flex:none}
+  .cred .role{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--signal);white-space:nowrap;padding-top:3px;flex:none;width:186px}
   .cred h3{font-size:1.04rem;font-weight:600;margin-bottom:2px}
   .cred p{font-size:.88rem;color:var(--text-dim)}
   .clients-box{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px 26px}
@@ -303,6 +303,7 @@
     .grid-setores{grid-template-columns:1fr}
     .grid-dores{grid-template-columns:1fr}
     .cred{flex-direction:column;gap:6px}
+    .cred .role{width:auto}
     .client{flex-direction:column;gap:2px}
     .client span{text-align:left}
   }
@@ -340,7 +341,7 @@
     <span class="status"><span class="dot"></span> Status: monitorando · Natal/RN · Atendimento remoto</span>
     <h1>Segurança de nível <span class="hl">enterprise</span> para a sua PME.</h1>
     <p class="lead">Monitoramento contínuo, resposta a incidentes e conformidade com a LGPD — com o rigor de um SOC corporativo, no orçamento de quem não pode manter um time de segurança interno.</p>
-    <p class="who">Por <b>Arthur Alves dos Santos</b> — atuo no Blue Team de uma das maiores locadoras de veículos do Brasil, a <b>Movida</b>, e trago essa experiência de defesa corporativa para empresas do seu porte.</p>
+    <p class="who">Por <b>Arthur Alves dos Santos</b> — atuo no Blue Team de uma das maiores locadoras de veículos do Brasil e trago essa experiência de defesa corporativa para empresas do seu porte.</p>
     <div class="hero-cta">
       <a class="btn btn-primary" href="#contato">Agendar diagnóstico gratuito →</a>
       <a class="btn btn-ghost" href="#servicos">Ver serviços</a>
@@ -370,32 +371,32 @@
     </div>
     <div class="grid-dores">
       <div class="dor">
-        <span class="ic">🔓</span>
+        <span class="ic"></span>
         <h3>Sem SOC nem monitoramento</h3>
         <p>Ataques acontecem em silêncio. Sem detecção em tempo real, o dano já está feito antes de qualquer reação.</p>
       </div>
       <div class="dor">
-        <span class="ic">📋</span>
+        <span class="ic"></span>
         <h3>LGPD sem estrutura real</h3>
-        <p>Ter um DPO não basta. A conformidade exige controles técnicos contínuos — logs, acessos, criptografia e políticas ativas.</p>
+        <p>Ter um DPO não basta. A conformidade exige controles técnicos contínuos: logs, acessos, criptografia e políticas ativas.</p>
       </div>
       <div class="dor">
-        <span class="ic">⚠️</span>
+        <span class="ic"></span>
         <h3>Sistemas e ERP expostos</h3>
         <p>Sistemas de gestão com portas abertas, senhas fracas e sem atualização são porta de entrada para ransomware.</p>
       </div>
       <div class="dor">
-        <span class="ic">🧩</span>
+        <span class="ic"></span>
         <h3>TI sem visibilidade</h3>
-        <p>Sem correlação de eventos e análise de contexto, o time de TI trata sintomas — nunca a causa real dos incidentes.</p>
+        <p>Sem correlação de eventos e análise de contexto, o time de TI trata sintomas nunca a causa real dos incidentes.</p>
       </div>
       <div class="dor">
-        <span class="ic">💸</span>
+        <span class="ic"></span>
         <h3>Especialista fora do orçamento</h3>
         <p>Um analista de segurança em folha custa caro com encargos. O modelo gerenciado entrega o essencial por uma fração disso.</p>
       </div>
       <div class="dor">
-        <span class="ic">🔄</span>
+        <span class="ic"></span>
         <h3>Resposta reativa ao incidente</h3>
         <p>Sem playbook e automação, cada incidente vira caos. A resposta lenta multiplica o impacto financeiro e de reputação.</p>
       </div>
@@ -521,7 +522,7 @@
     <div class="atu-grid">
       <div class="creds">
         <div class="cred">
-          <span class="role">Atuação · Blue Team</span>
+          <span class="role">Atuação · Cibersegurança</span>
           <div><h3>Movida</h3><p>Atuo na defesa (Blue Team) de uma das maiores locadoras de veículos do Brasil: detecção, resposta a incidentes e threat intelligence em escala corporativa.</p></div>
         </div>
         <div class="cred">
@@ -532,7 +533,10 @@
 
       <div class="clients-box">
         <span class="eyebrow">Clientes atendidos</span>
-        <div class="client"><b>Santos Cyber Group</b><span>consultoria<br>fundador</span></div>
+        <div class="client"><b>FIERN</b><span>Brasil 🇧🇷<br>cibersegurança</span></div>
+        <div class="client"><b>Dyson Tech</b><span>Brasil 🇧🇷<br>cibersegurança</span></div>
+        <div class="client"><b>Parnamirim Suplementos</b><span>Brasil 🇧🇷<br>cibersegurança</span></div>
+        <div class="client"><b>Movida</b><span>Brasil 🇧🇷<br>cibersegurança</span></div>
         <div class="client"><b>Drive On Holidays</b><span>Portugal 🇵🇹<br>cibersegurança</span></div>
         <div class="client"><b>COMAV Transportes</b><span>Brasil 🇧🇷<br>cibersegurança</span></div>
       </div>
@@ -540,9 +544,7 @@
   </div>
 </section>
 
-<!-- DEPOIMENTOS — estrutura pronta. Quando tiver depoimento REAL de cliente,
-     remova este comentário (a linha abaixo e a do fim do bloco) e edite os textos.
-     NÃO publique depoimento fictício: numa empresa que vende confiança, isso é risco de reputação.
+
 <section id="depoimentos">
   <div class="wrap">
     <div class="sec-head">
@@ -551,17 +553,18 @@
     </div>
     <div class="grid-depo">
       <div class="depo">
-        <p>"Depoimento real do cliente aqui."</p>
-        <div class="who-d"><span class="ini">XX</span><div><div class="nm">Nome do cliente</div><div class="rl">Cargo · Empresa</div></div></div>
+        <p>"Prezado Arthur, gostaríamos de agradecer pela sua atenção e pelo auxílio prestado na investigação do problema em nossa rede.
+
+Reconhecemos o tempo e a dedicação envolvidos na análise realizada."</p>
+        <div class="who-d"><span class="ini">XX</span><div><div class="nm">Sterffany Castro</div><div class="rl">COMAV Transportes</div></div></div>
       </div>
       <div class="depo">
-        <p>"Depoimento real do cliente aqui."</p>
-        <div class="who-d"><span class="ini">XX</span><div><div class="nm">Nome do cliente</div><div class="rl">Cargo · Empresa</div></div></div>
+        <p>"A consultoria do Arthur foi fundamental para elevarmos o nível de maturidade da segurança da informação aqui na Dyson Tech. Ele trouxe uma visão estratégica, prática e altamente especializada, identificando vulnerabilidades e estruturando defesas sem impactar a agilidade da nossa operação. Hoje rodamos nossos projetos com total confiança e tranquilidade."</p>
+        <div class="who-d"><span class="ini">XX</span><div><div class="nm">Yuri Freire</div><div class="rl">Diretor de Tecnologia · Dyson Tech</div></div></div>
       </div>
-      <div class="depo">
+    <!-- ATUAÇÃO / PROVA  <div class="depo">
         <p>"Depoimento real do cliente aqui."</p>
-        <div class="who-d"><span class="ini">XX</span><div><div class="nm">Nome do cliente</div><div class="rl">Cargo · Empresa</div></div></div>
-      </div>
+        <div class="who-d"><span class="ini">XX</span><div><div class="nm">Nome do cliente</div><div class="rl">Cargo · Empresa</div></div></div> --> 
     </div>
   </div>
 </section>
@@ -573,7 +576,7 @@
     <div class="sec-head">
       <span class="eyebrow">Expertise técnica</span>
       <h2>As ferramentas que domino.</h2>
-      <p>Do SIEM corporativo ao stack open-source que cabe no orçamento de uma PME — escolho a ferramenta certa para cada porte, sem empurrar licença cara que você não precisa.</p>
+      <p>Do SIEM corporativo ao stack open-source que cabe no orçamento de uma PME: escolho a ferramenta certa para cada porte, sem empurrar licença cara que você não precisa.</p>
     </div>
     <div class="exp-grid">
       <div class="exp">
@@ -582,7 +585,8 @@
       </div>
       <div class="exp">
         <span class="exp-cat">EDR / XDR</span>
-        <p>CrowdStrike Falcon <span class="ok">✓ certificado</span></p>
+        <p>CrowdStrike Falcon <span class="ok">✓ certificado</span> · Microsoft Defender</p>
+        
       </div>
       <div class="exp">
         <span class="exp-cat">Gestão de vulnerabilidades</span>
@@ -598,15 +602,15 @@
       </div>
       <div class="exp">
         <span class="exp-cat">Detecção & frameworks</span>
-        <p>YARA-L · MITRE ATT&CK</p>
+        <p>YARA-L · MITRE ATT&CK · NIST · ISO 27001 </p>
       </div>
       <div class="exp">
         <span class="exp-cat">Automação & IA aplicada</span>
-        <p>n8n · Ollama</p>
+        <p>n8n</p>
       </div>
       <div class="exp">
         <span class="exp-cat">Prevenção a fraudes</span>
-        <p>COFPS <span class="ok">✓ certificado</span></p>
+        <p>Especialista em Prevenção de Fraudes <span class="ok">✓ certificado</span></p>
       </div>
     </div>
   </div>
@@ -620,8 +624,8 @@
       <div class="sobre-body">
         <span class="eyebrow">Quem está por trás</span>
         <h2 style="font-size:clamp(1.6rem,3vw,2.2rem);margin:14px 0 20px">Arthur Alves dos Santos</h2>
-        <p>Defendo ambientes corporativos todos os dias — e fundei a Santos Cyber Group para resolver um problema que vejo o tempo todo: <b>a pequena e média empresa sofre os mesmos ataques que a grande, mas não tem como pagar um time de segurança.</b></p>
-        <p>Trago o mesmo rigor de um SOC enterprise para empresas do seu porte, com ferramentas que cabem no seu orçamento. Sem jargão, sem vender medo — só proteção que faz sentido para o seu negócio.</p>
+        <p>Defendo ambientes corporativos todos os dias e fundei a Santos Cyber Group para resolver um problema que vejo o tempo todo: <b>a pequena e média empresa sofre os mesmos ataques que a grande, mas não tem como pagar um time de segurança.</b></p>
+        <p>Trago o mesmo rigor de um SOC enterprise para empresas do seu porte, com ferramentas que cabem no seu orçamento. Sem jargão, sem vender medo: só proteção que faz sentido para o seu negócio.</p>
         <p>Atuo no Blue Team da Movida · Certificado Google em Security Operations e na trilha CrowdStrike Falcon · Natal/RN.</p>
       </div>
     </div>
@@ -666,17 +670,20 @@
     <div class="sec-head">
       <span class="eyebrow">Certificações</span>
       <h2>Formação e credenciais.</h2>
-      <p>Uma seleção das principais, com foco em Security Operations (Google) e EDR/XDR (CrowdStrike) — exatamente as ferramentas que uso no dia a dia da defesa.</p>
+      <p>Uma seleção das principais, com foco em Security Operations (Google) e EDR/XDR (CrowdStrike) exatamente as ferramentas que uso no dia a dia da defesa.</p>
     </div>
 
     <div class="cert-list">
+      <div class="cert-item">Pós Graduando em Cibersegurança e Gestão da Informação<small>UFRN · 2026</small></div>
+      <div class="cert-item">Sistemas para Internet<small>Graduação · Tecnólogo</small></div>
+      <div class="cert-item">Especialista em Prevenção de Fraudes Online (COFPS)<small>Hack &amp; Fix · 2026</small></div>
       <div class="cert-item">Google Security Operations — Deep Dive<small>Google · 2024</small></div>
       <div class="cert-item">Google Security Operations — Fundamentals<small>Google · 2024</small></div>
       <div class="cert-item">CrowdStrike Falcon — Investigation Fundamentals<small>CrowdStrike · 2024</small></div>
       <div class="cert-item">CrowdStrike Falcon — Vulnerability Management<small>CrowdStrike · 2023</small></div>
       <div class="cert-item">CrowdStrike Falcon — Firewall Management<small>CrowdStrike · 2023</small></div>
-      <div class="cert-item">Especialista em Prevenção de Fraudes Online (COFPS)<small>Hack &amp; Fix · 2026</small></div>
-      <div class="cert-item">Sistemas para Internet<small>Graduação · Tecnólogo</small></div>
+      
+      
     </div>
   </div>
 </section>
