@@ -5,7 +5,8 @@ import { services, serviceHref } from '../../data/services';
 import { sectors, sectorHref } from '../../data/sectors';
 
 const year = new Date().getFullYear();
-const legalLine = [site.legalName, site.tradeName, site.cnpj && `CNPJ ${site.cnpj}`].filter(Boolean).join(' · ');
+const footerName = site.tradeName || site.name;
+const legalLine = site.cnpj && `CNPJ ${site.cnpj}`;
 ---
 
 <footer class="site-footer">
@@ -43,10 +44,16 @@ const legalLine = [site.legalName, site.tradeName, site.cnpj && `CNPJ ${site.cnp
     </div>
 
     <div class="bottom">
-      <p>© {year} {site.name}{legalLine && ` · ${legalLine}`}</p>
+      <p>© {year} {footerName}{legalLine && ` · ${legalLine}`}</p>
       <ul role="list">
         <li><a href="/privacidade">Política de privacidade</a></li>
-        <li><a href="/.well-known/security.txt">Reportar vulnerabilidade</a></li>
+        <li>
+          <a
+            href={whatsappUrl('Olá, gostaria de reportar uma vulnerabilidade.')}
+            target="_blank"
+            rel="noopener noreferrer"
+          >Reportar vulnerabilidade</a>
+        </li>
       </ul>
     </div>
   </div>

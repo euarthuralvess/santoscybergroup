@@ -10,7 +10,7 @@
 export const site = {
   name: 'Santos Cyber Group',
   legalName: 'Arthur A. dos Santos', // razão social
-  tradeName: 'A a Consultoria e Soluções em TI', // nome fantasia
+  tradeName: 'AA Consultoria e Soluções em TI', // nome fantasia
   cnpj: '50.486.595/0001-05',
   url: 'https://www.santoscybergroup.com.br',
   lang: 'pt-BR',
