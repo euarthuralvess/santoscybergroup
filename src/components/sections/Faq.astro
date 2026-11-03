@@ -1,0 +1,94 @@
+---
+interface Props {
+  items: { q: string; a: string }[];
+  title?: string;
+  eyebrow?: string;
+}
+const { items, title = 'Perguntas frequentes', eyebrow = 'Dúvidas' } = Astro.props;
+---
+
+<section class="section bg-canvas divide" aria-labelledby="faq-title">
+  <div class="wrap grid">
+    <div>
+      <h2 id="faq-title" class="title-2xl">{title}</h2>
+    </div>
+    <div class="list">
+      {
+        items.map((f) => (
+          <details>
+            <summary>
+              <span>{f.q}</span>
+              <span class="sign" aria-hidden="true" />
+            </summary>
+            <p>{f.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 32px clamp(32px, 6vw, 96px);
+  }
+  details {
+    border-bottom: 1px solid var(--line);
+  }
+  details:first-child {
+    border-top: 1px solid var(--line);
+  }
+  summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    padding-block: 22px;
+    cursor: pointer;
+    list-style: none;
+    font-size: var(--fs-md);
+    font-weight: 500;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary:hover {
+    color: #fff;
+  }
+  .sign {
+    flex: none;
+    position: relative;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+  }
+  .sign::before,
+  .sign::after {
+    content: '';
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    top: 13px;
+    border-top: 1.5px solid var(--accent);
+    transition: rotate var(--dur) var(--ease);
+  }
+  .sign::after {
+    rotate: 90deg;
+  }
+  details[open] .sign::after {
+    rotate: 0deg;
+  }
+  details p {
+    max-width: 64ch;
+    padding-bottom: 24px;
+    color: var(--ink-2);
+  }
+  @media (max-width: 860px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

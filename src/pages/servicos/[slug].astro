@@ -1,0 +1,272 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import Faq from '../../components/sections/Faq.astro';
+import CtaBand from '../../components/sections/CtaBand.astro';
+import Button from '../../components/ui/Button.astro';
+import { services, serviceHref, type Service } from '../../data/services';
+import { whatsappUrl } from '../../data/site';
+
+export function getStaticPaths() {
+  return services.map((service, index) => ({ params: { slug: service.slug }, props: { service, index } }));
+}
+
+interface Props {
+  service: Service;
+  index: number;
+}
+const { service, index } = Astro.props;
+const crumbs = [
+  { name: 'Serviços', href: '/servicos' },
+  { name: service.name, href: serviceHref(service) },
+];
+const others = services.filter((s) => s.slug !== service.slug);
+const urgent = service.route === 'emergencia';
+const message = urgent ? 'Olá, estamos com um incidente de segurança e precisamos de ajuda.' : `Olá, quero saber mais sobre o ${service.name}.`;
+---
+
+<BaseLayout
+  title={service.seo.title}
+  description={service.seo.description}
+  breadcrumbs={crumbs}
+  faq={service.faq}
+  pageServices={[{ name: service.name, description: service.summary, url: serviceHref(service) }]}
+>
+  <PageHero eyebrow={service.format} title={service.name} lead={`${service.promise} ${service.summary}`} crumbs={crumbs} seed={20 + index}>
+    <div class="hero-actions">
+      <Button href={whatsappUrl(message)} external>{urgent ? 'Pedir ajuda pelo WhatsApp' : 'Agendar conversa gratuita'}</Button>
+      <Button href="#como-funciona" variant="outline">Como funciona</Button>
+    </div>
+  </PageHero>
+
+  {
+    urgent && (
+      <div class="wrap">
+        <aside class="urgent" aria-labelledby="urgent-title">
+          <span class="dot" aria-hidden="true" />
+          <div>
+            <h2 id="urgent-title">Enquanto isso, não desligue nem formate nada.</h2>
+            <p>
+              Desconecte da rede os computadores afetados, troque as senhas de contas administrativas a partir de um aparelho
+              limpo e anote o que foi percebido e quando. Isso preserva as evidências da investigação.
+            </p>
+          </div>
+        </aside>
+      </div>
+    )
+  }
+
+  <section class="section bg-canvas" aria-labelledby="what-title">
+    <div class="wrap overview">
+      <div>
+        <span class="eyebrow">O que é</span>
+        <h2 id="what-title" class="title-2xl">{service.promise}</h2>
+        <div class="prose body">
+          {service.body.map((p) => <p>{p}</p>)}
+        </div>
+        <p class="ideal">
+          <span class="label">Ideal para</span>
+          {service.idealFor}
+        </p>
+      </div>
+      <aside class="card gets" aria-labelledby="gets-title">
+        <h2 id="gets-title" class="label">O que você recebe</h2>
+        <ul class="checks">
+          {service.deliverables.map((d) => <li>{d}</li>)}
+        </ul>
+        {service.offerNote && <p class="offer">{service.offerNote}</p>}
+        <Button href={whatsappUrl(message)} external variant="brand">
+          {urgent ? 'Pedir ajuda agora' : 'Quero começar'}
+        </Button>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section bg-night divide" id="como-funciona" aria-labelledby="how-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Como funciona</span>
+        <h2 id="how-title" class="title-3xl">Três etapas, do primeiro contato à entrega.</h2>
+      </div>
+      <ol class="steps" role="list">
+        {
+          service.steps.map((s, i) => (
+            <li class="card">
+              <span class="n mono" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <h3>
+                <span class="sr-only">Etapa {i + 1}: </span>
+                {s.title}
+              </h3>
+              <p>{s.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <Faq items={service.faq} title="Dúvidas sobre este serviço" />
+
+  <section class="section bg-canvas-2 divide" aria-labelledby="others-title">
+    <div class="wrap">
+      <span class="eyebrow">Outros serviços</span>
+      <h2 id="others-title" class="title-2xl">Continue a rota de proteção.</h2>
+      <ul class="others" role="list">
+        {
+          others.map((s) => (
+            <li class="card">
+              <span class="label">{s.format}</span>
+              <h3>
+                <a href={serviceHref(s)}>{s.name}</a>
+              </h3>
+              <p>{s.promise}</p>
+              <span class="more" aria-hidden="true">
+                Saiba mais
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand message={message} />
+</BaseLayout>
+
+<style>
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .urgent {
+    display: flex;
+    gap: 16px;
+    margin-top: -40px;
+    position: relative;
+    padding: 24px 28px;
+    border-radius: var(--r-md);
+    background: var(--danger-tint);
+    border: 1px solid rgb(255 122 136 / 0.3);
+  }
+  .urgent h2 {
+    font-size: var(--fs-md);
+    font-weight: 500;
+  }
+  .urgent p {
+    margin-top: 6px;
+    max-width: 80ch;
+    font-size: var(--fs-sm);
+    color: var(--ink-2);
+  }
+  .dot {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    margin-top: 8px;
+    border-radius: 50%;
+    background: var(--danger);
+    box-shadow: 0 0 0 5px rgb(255 122 136 / 0.15);
+  }
+  .overview {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    gap: 48px clamp(40px, 6vw, 88px);
+    align-items: start;
+  }
+  .body {
+    margin-top: 24px;
+  }
+  .ideal {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 32px;
+    padding: 20px 0 0;
+    border-top: 1px solid var(--line);
+    font-size: var(--fs-md);
+    color: var(--ink);
+  }
+  .gets {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: 28px;
+  }
+  .offer {
+    padding: 14px 16px;
+    border-radius: var(--r-sm);
+    background: var(--accent-tint);
+    color: var(--accent);
+    font-size: var(--fs-sm);
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gap);
+    margin-top: clamp(40px, 5vw, 56px);
+  }
+  .steps li {
+    padding: 28px;
+  }
+  .n {
+    font-size: var(--fs-2xs);
+    color: var(--accent);
+  }
+  .steps h3 {
+    margin-top: 16px;
+    font-size: var(--fs-lg);
+  }
+  .steps p {
+    margin-top: 8px;
+    font-size: var(--fs-sm);
+    color: var(--muted);
+  }
+  .others {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gap);
+    margin-top: 40px;
+  }
+  .others li {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 26px;
+    transition: border-color var(--dur) var(--ease);
+  }
+  .others li:hover {
+    border-color: var(--line-strong);
+  }
+  .others h3 {
+    margin-top: 6px;
+    font-size: var(--fs-lg);
+  }
+  .others h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+  .others p {
+    font-size: var(--fs-sm);
+    color: var(--muted);
+  }
+  .others .more {
+    margin-top: auto;
+    padding-top: 10px;
+    font-size: var(--fs-sm);
+  }
+  @media (max-width: 900px) {
+    .overview,
+    .steps,
+    .others {
+      grid-template-columns: 1fr;
+    }
+    .gets {
+      position: static;
+    }
+  }
+</style>

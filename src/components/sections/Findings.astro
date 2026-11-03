@@ -1,0 +1,218 @@
+---
+import Status from '../ui/Status.astro';
+import { findings, findingSteps } from '../../data/findings';
+
+const tone = (s: string) => (s === 'Prioridade' ? 'alert' : s === 'Em seguida' ? 'info' : s === 'Monitorar' ? 'ok' : 'neutral');
+const sevTone = (s: string) => (s === 'Alta' ? 'danger' : 'neutral');
+const ranked = [...findings].sort((a, b) => a.rank - b.rank);
+---
+
+<section class="section bg-canvas" aria-labelledby="findings-title">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="findings-title" class="title-3xl">O Raio-X diz o que corrigir primeiro</h2>
+      <p class="lead">
+        Uma avaliação objetiva das suas vulnerabilidades, com um plano de ação priorizado pelo que realmente coloca o
+        negócio em risco. Clique nas etapas para ver como uma lista de achados vira prioridade.
+      </p>
+    </div>
+
+    <div class="demo card" data-tabs>
+      <div class="tabs" role="tablist" aria-label="Etapas do Raio-X">
+        {
+          findingSteps.map((s, i) => (
+            <button
+              class="tab"
+              role="tab"
+              type="button"
+              id={`f-tab-${i}`}
+              aria-controls={`f-panel-${i}`}
+              aria-selected={i === 2 ? 'true' : 'false'}
+              tabindex={i === 2 ? 0 : -1}
+            >
+              <span class="tab__n">{i + 1}</span>
+              {s.label}
+            </button>
+          ))
+        }
+      </div>
+
+      {
+        findingSteps.map((s, i) => (
+          <div class="panel-wrap" role="tabpanel" id={`f-panel-${i}`} aria-labelledby={`f-tab-${i}`} hidden={i !== 2} tabindex="0">
+            <p class="step-text">{s.text}</p>
+            <ul class="rows" role="list">
+              {(i === 2 ? ranked : findings).map((f) => (
+                <li class:list={['row', `row--${i}`]}>
+                  <div class="row__main">
+                    <span class="label">{f.area}</span>
+                    <span class="row__title">{f.title}</span>
+                  </div>
+                  {i === 0 && (
+                    <div class="row__side">
+                      <span class="muted">Severidade técnica</span>
+                      <Status tone={sevTone(f.severity)}>{f.severity}</Status>
+                    </div>
+                  )}
+                  {i >= 1 && (
+                    <div class="row__ctx">
+                      <span>Sistema: {f.system}</span>
+                      <span>Operação: {f.business}</span>
+                    </div>
+                  )}
+                  {i === 2 && (
+                    <div class="row__side">
+                      <Status tone={tone(f.status)}>{f.status}</Status>
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+      <p class="note">
+        Exemplo ilustrativo. As prioridades reais dependem do levantamento feito na sua empresa e da conversa com o seu time.
+      </p>
+    </div>
+  </div>
+</section>
+
+<script src="../../scripts/tabs.ts"></script>
+
+<style>
+  .demo {
+    margin-top: clamp(40px, 5vw, 56px);
+    padding: clamp(20px, 3vw, 36px);
+  }
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 18px 8px 8px;
+    border: 1px solid var(--line);
+    border-radius: var(--pill);
+    background: rgb(10 16 34 / 0.6);
+    color: var(--ink);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    transition:
+      background-color var(--dur) var(--ease),
+      color var(--dur) var(--ease),
+      border-color var(--dur) var(--ease);
+  }
+  .tab:hover {
+    border-color: var(--line-strong);
+  }
+  .tab__n {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+  }
+  .tab[aria-selected='true'] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #081033;
+  }
+  .tab[aria-selected='true'] .tab__n {
+    background: #081033;
+    border-color: #081033;
+    color: var(--accent);
+  }
+  .step-text {
+    margin: 22px 0 16px;
+    font-size: var(--fs-sm);
+    color: var(--ink-2);
+  }
+  .rows {
+    display: grid;
+    gap: 10px;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px 24px;
+    padding: 16px 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    background: rgb(5 11 30 / 0.55);
+  }
+  .row--0 {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .row--1 {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  }
+  .row__main {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .row__main .label {
+    font-size: 0.6875rem;
+  }
+  .row__title {
+    font-weight: 500;
+  }
+  .row__ctx {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: var(--fs-xs);
+    color: var(--ink-2);
+  }
+  .row__side {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: var(--fs-xs);
+  }
+  .note {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font-size: var(--fs-xs);
+    color: var(--muted);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    [data-interacted] [role='tabpanel']:not([hidden]) .row {
+      animation: rise 0.45s var(--ease) both;
+    }
+    [data-interacted] [role='tabpanel']:not([hidden]) .row:nth-child(2) {
+      animation-delay: 0.04s;
+    }
+    [data-interacted] [role='tabpanel']:not([hidden]) .row:nth-child(3) {
+      animation-delay: 0.08s;
+    }
+    [data-interacted] [role='tabpanel']:not([hidden]) .row:nth-child(4) {
+      animation-delay: 0.12s;
+    }
+    [data-interacted] [role='tabpanel']:not([hidden]) .row:nth-child(5) {
+      animation-delay: 0.16s;
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+  @media (max-width: 720px) {
+    .row,
+    .row--0,
+    .row--1 {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

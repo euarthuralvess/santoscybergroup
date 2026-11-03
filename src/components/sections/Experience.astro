@@ -1,0 +1,85 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '../../assets/images/arthur.jpg';
+import { founder } from '../../data/site';
+
+interface Props {
+  showLink?: boolean;
+}
+const { showLink = true } = Astro.props;
+---
+
+<section class="section bg-night" aria-labelledby="exp-title">
+  <div class="wrap">
+    <div class="intro">
+      <div>
+        <h2 id="exp-title" class="title-3xl">Experiência enterprise, aplicada ao seu porte</h2>
+      </div>
+      <p class="text-2">
+        A mesma disciplina de quem defende grandes operações, agora a serviço da sua empresa. Quem faz o seu Raio-X e lê os
+        seus relatórios é quem responde a incidentes numa das maiores locadoras de veículos do país.
+      </p>
+    </div>
+
+    <div class="founder card">
+      <Image src={portrait} alt={`Retrato de ${founder.name}`} width={320} height={320} class="photo" loading="lazy" />
+      <div class="founder__text">
+        <span class="label">Fundador</span>
+        <h3>{founder.name}</h3>
+        <p>
+          Atua no Blue Team de uma das maiores locadoras de veículos do Brasil, com detecção, resposta a incidentes e
+          inteligência de ameaças em escala corporativa. Treinamentos oficiais Google Security Operations e CrowdStrike
+          Falcon. Pós-graduando em Cibersegurança na UFRN.
+        </p>
+        {showLink && <a class="more" href="/sobre">Trajetória, formação e palestras</a>}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px clamp(32px, 6vw, 96px);
+    align-items: end;
+  }
+  .intro p {
+    font-size: var(--fs-md);
+    line-height: 1.6;
+  }
+  .founder {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(24px, 4vw, 48px);
+    align-items: center;
+    margin-top: clamp(40px, 5vw, 64px);
+    padding: clamp(20px, 3vw, 32px);
+  }
+  .founder :global(.photo) {
+    width: clamp(120px, 16vw, 200px);
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--r-md);
+    filter: grayscale(0.25) contrast(1.05);
+  }
+  .founder h3 {
+    margin-top: 6px;
+    font-size: var(--fs-2xl);
+  }
+  .founder p {
+    margin-block: 12px 18px;
+    max-width: 62ch;
+    color: var(--ink-2);
+  }
+  @media (max-width: 860px) {
+    .intro {
+      grid-template-columns: 1fr;
+    }
+    .founder {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

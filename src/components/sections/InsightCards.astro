@@ -1,0 +1,152 @@
+---
+import { getCollection } from 'astro:content';
+import { formatDate } from '../../lib/format';
+
+interface Props {
+  limit?: number;
+  showHead?: boolean;
+}
+const { limit = 3, showHead = true } = Astro.props;
+const posts = (await getCollection('insights', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, limit);
+---
+
+<section class="section bg-canvas-2 divide" aria-labelledby={showHead ? 'ins-title' : undefined} aria-label={showHead ? undefined : 'Artigos'}>
+  <div class="wrap">
+    {
+      showHead && (
+        <div class="head">
+          <div class="section-head">
+            <h2 id="ins-title" class="title-3xl">
+              Artigos
+            </h2>
+            <p class="lead">LGPD, riscos e boas práticas, escritos para quem decide e não para quem configura.</p>
+          </div>
+          <a class="btn btn--outline" href="/insights">Ver todos os artigos</a>
+        </div>
+      )
+    }
+    <ul class="grid" role="list">
+      {
+        posts.map((p, i) => (
+          <li class="card post">
+            <div class="body">
+              <p class="meta">
+                <span class="cat">{p.data.category}</span>
+                <time datetime={p.data.date.toISOString()}>{formatDate(p.data.date)}</time>
+              </p>
+              <h3>
+                <a href={`/insights/${p.id}`}>{p.data.title}</a>
+              </h3>
+              <p>{p.data.description}</p>
+              <span class="more" aria-hidden="true">
+                Ler artigo
+              </span>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gap);
+    margin-top: clamp(40px, 5vw, 56px);
+  }
+  .post {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: border-color var(--dur) var(--ease);
+  }
+  .post:hover {
+    border-color: var(--line-strong);
+  }
+  .cover {
+    position: relative;
+    height: 170px;
+    padding: 18px;
+    background:
+      radial-gradient(70% 90% at 80% 10%, rgb(47 111 228 / 0.55), transparent 70%),
+      repeating-linear-gradient(90deg, rgb(120 180 255 / 0.07) 0 1px, transparent 1px 28px),
+      repeating-linear-gradient(0deg, rgb(120 180 255 / 0.07) 0 1px, transparent 1px 28px),
+      var(--night);
+    border-bottom: 1px solid var(--line);
+  }
+  .cover[data-variant='1'] {
+    background:
+      radial-gradient(60% 80% at 15% 90%, rgb(73 211 154 / 0.28), transparent 70%),
+      repeating-linear-gradient(45deg, rgb(120 180 255 / 0.06) 0 1px, transparent 1px 22px),
+      var(--night);
+  }
+  .cover[data-variant='2'] {
+    background:
+      radial-gradient(60% 80% at 85% 85%, rgb(242 169 59 / 0.25), transparent 70%),
+      radial-gradient(circle at 30% 40%, rgb(120 180 255 / 0.18) 0 2px, transparent 3px) 0 0 / 26px 26px,
+      var(--night);
+  }
+  .cover span {
+    display: inline-block;
+    padding: 4px 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--pill);
+    background: rgb(5 11 46 / 0.6);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 24px;
+  }
+  .meta {
+    display: flex;
+    gap: 12px;
+    font-size: var(--fs-xs);
+    color: var(--muted);
+  }
+  .cat {
+    color: var(--accent);
+    font-weight: 500;
+  }
+  h3 {
+    margin-top: 10px;
+    font-size: var(--fs-lg);
+  }
+  h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+  .body p {
+    margin-top: 10px;
+    font-size: var(--fs-sm);
+    color: var(--muted);
+  }
+  .more {
+    margin-top: auto;
+    padding-top: 20px;
+    font-size: var(--fs-sm);
+  }
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/sections/Hero.astro';
+import Findings from '../components/sections/Findings.astro';
+import MonthlyReport from '../components/sections/MonthlyReport.astro';
+import Services from '../components/sections/Services.astro';
+import Process from '../components/sections/Process.astro';
+import Experience from '../components/sections/Experience.astro';
+import Testimonials from '../components/sections/Testimonials.astro';
+import Sectors from '../components/sections/Sectors.astro';
+import InsightCards from '../components/sections/InsightCards.astro';
+import Faq from '../components/sections/Faq.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
+import { site, faq } from '../data/site';
+---
+
+<BaseLayout
+  title={`${site.name}: cibersegurança para pequenas e médias empresas`}
+  description="Cibersegurança para PMEs: Raio-X de segurança, acompanhamento mensal pelo CIS Controls, vCISO e LGPD, e resposta a incidentes. Natal/RN, atendimento em todo o Brasil."
+  faq={faq}
+>
+  <Hero />
+  <Services />
+  <MonthlyReport />
+  <Findings />
+  <Process />
+  <Experience />
+  <Testimonials />
+  <Sectors />
+  <InsightCards />
+  <Faq items={faq} />
+  <CtaBand />
+</BaseLayout>

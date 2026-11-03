@@ -1,0 +1,27 @@
+---
+/**
+ * The official SG shield logo. logo-sg.png is generated from logo-sg.jpg by
+ * `pnpm brand` (black background keyed out, trimmed).
+ */
+import { Image } from 'astro:assets';
+import logo from '../../assets/images/logo-sg.png';
+
+interface Props {
+  size?: number;
+  class?: string;
+  title?: string;
+}
+const { size = 32, class: className, title } = Astro.props;
+const height = Math.round((size * logo.height) / logo.width);
+---
+
+<Image
+  src={logo}
+  class:list={['shield', className]}
+  width={size}
+  height={height}
+  densities={[1, 2, 3]}
+  alt={title ?? ''}
+  aria-hidden={title ? undefined : 'true'}
+  loading="eager"
+/>

@@ -1,0 +1,207 @@
+---
+import { Image } from 'astro:assets';
+import ShieldGlobe from '../art/ShieldGlobe.astro';
+import ClientMarquee from './ClientMarquee.astro';
+import Button from '../ui/Button.astro';
+import portrait from '../../assets/images/arthur.jpg';
+import { whatsappUrl, founder } from '../../data/site';
+---
+
+<section class="hero" aria-labelledby="hero-title" data-globe-host>
+  <canvas class="globe" data-globe aria-hidden="true"></canvas>
+  <div class="fade" aria-hidden="true"></div>
+  <div class="wrap hero__grid">
+    <div class="hero__text" data-neural-avoid>
+      <a class="byline in" href="/sobre" style="--d: 0.05s">
+        <Image src={portrait} alt="" width={72} height={72} class="byline__img" loading="eager" />
+        <span>
+          <strong>{founder.name}</strong>
+          Blue Team em uma das maiores locadoras de veículos do Brasil
+        </span>
+      </a>
+      <h1 id="hero-title" class="in" style="--d: 0.15s">Segurança com experiência enterprise para a sua PME</h1>
+      <p class="hero__lead in" style="--d: 0.3s">
+        Raio-X de segurança, acompanhamento mensal e apoio à LGPD, no orçamento de quem não pode manter um time de segurança
+        interno.
+      </p>
+      <div class="hero__actions in" style="--d: 0.42s">
+        <Button href={whatsappUrl()} external>Agendar conversa gratuita</Button>
+        <a class="link" href="/servicos">Ver os serviços</a>
+      </div>
+      <ul class="hero__proof in" style="--d: 0.52s" role="list">
+        <li>Treinamento oficial Google SecOps e CrowdStrike</li>
+        <li>Alerta no mesmo dia para achado crítico</li>
+        <li>Clientes no Brasil e em Portugal</li>
+      </ul>
+    </div>
+    <div class="hero__visual">
+      <ShieldGlobe />
+    </div>
+  </div>
+
+  <div class="wrap clients">
+    <ClientMarquee />
+  </div>
+</section>
+
+<script src="../../scripts/globe.ts"></script>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    margin-top: calc(-1 * var(--header-h));
+    padding-top: calc(var(--header-h) + clamp(48px, 7vw, 96px));
+    background: linear-gradient(180deg, var(--night) 0%, #081344 60%, var(--night) 100%);
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgb(170 200 255 / 0.35) 0 1px, transparent 1.5px) 0 0 / 64px 64px,
+      radial-gradient(circle at 60% 70%, rgb(170 200 255 / 0.22) 0 1px, transparent 1.5px) 0 0 / 97px 97px;
+    mask-image: radial-gradient(70% 80% at 70% 40%, #000, transparent);
+    -webkit-mask-image: radial-gradient(70% 80% at 70% 40%, #000, transparent);
+    pointer-events: none;
+  }
+  .globe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .fade {
+    position: absolute;
+    inset: auto 0 0;
+    height: 160px;
+    background: linear-gradient(180deg, transparent, var(--night));
+    pointer-events: none;
+  }
+  .hero__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(40px, 6vw, 96px);
+    align-items: center;
+    pointer-events: none;
+  }
+  .hero__grid > * {
+    pointer-events: auto;
+  }
+  .byline {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 16px 6px 6px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--pill);
+    background: rgb(5 11 46 / 0.6);
+    font-size: var(--fs-xs);
+    line-height: 1.35;
+    color: var(--muted);
+    transition: border-color var(--dur) var(--ease);
+  }
+  .byline:hover {
+    border-color: var(--accent);
+  }
+  .byline strong {
+    display: block;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .byline :global(.byline__img) {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  h1 {
+    margin-top: 28px;
+    max-width: 16ch;
+    font-size: clamp(2.375rem, 1.5rem + 2.6vw, 3.375rem);
+    font-weight: 500;
+    line-height: 1.06;
+    letter-spacing: -0.035em;
+  }
+  .hero__lead {
+    margin-top: 24px;
+    max-width: 44ch;
+    font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 28px;
+    margin-top: 36px;
+  }
+  .link {
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    text-decoration-color: var(--line-strong);
+  }
+  .link:hover {
+    text-decoration-color: var(--accent);
+  }
+  .hero__proof {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    margin-top: 40px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    font-size: var(--fs-xs);
+    color: var(--muted);
+  }
+  .hero__proof li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero__proof li::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    flex: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.2l2.8 2.8 6.2-6.2' fill='none' stroke='%2378b4ff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 14px no-repeat;
+  }
+  .clients {
+    position: relative;
+    margin-top: clamp(56px, 7vw, 96px);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .in {
+      animation: rise 0.8s var(--ease) var(--d, 0s) both;
+    }
+    .hero__visual,
+    .globe {
+      animation: fade-in 1.4s var(--ease) 0.25s both;
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @media (max-width: 980px) {
+    .hero__grid {
+      grid-template-columns: 1fr;
+    }
+    .hero__visual {
+      margin-top: 8px;
+    }
+  }
+</style>

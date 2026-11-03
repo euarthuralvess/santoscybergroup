@@ -1,0 +1,205 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import { site, whatsappUrl } from '../data/site';
+import { sectors } from '../data/sectors';
+import { services } from '../data/services';
+
+const crumbs = [{ name: 'Contato', href: '/contato' }];
+---
+
+<BaseLayout
+  title="Contato: agende uma conversa gratuita"
+  description="Fale com a Santos Cyber Group pelo WhatsApp ou envie uma mensagem. A primeira conversa é gratuita e sem compromisso."
+  breadcrumbs={crumbs}
+>
+  <PageHero
+    eyebrow="Contato"
+    title="Comece com uma conversa gratuita."
+    lead="Você conta como a empresa funciona hoje. Nós dizemos, sem compromisso, por onde começar."
+    crumbs={crumbs}
+    seed={71}
+  />
+
+  <section class="section bg-canvas" aria-labelledby="form-title">
+    <div class="wrap layout">
+      <form class="card form" data-wa-form data-wa-number={site.whatsapp} novalidate>
+        <h2 id="form-title" class="title-xl">Envie uma mensagem</h2>
+        <p class="muted hint">
+          O formulário monta a mensagem e abre o WhatsApp para você enviar. Nada é armazenado neste site.
+        </p>
+
+        <div class="fields">
+          <label>
+            <span>Seu nome</span>
+            <input name="nome" autocomplete="name" required />
+          </label>
+          <label>
+            <span>Empresa</span>
+            <input name="empresa" autocomplete="organization" required />
+          </label>
+          <label>
+            <span>Setor</span>
+            <select name="setor">
+              <option value="">Selecione</option>
+              {sectors.map((s) => <option>{s.name}</option>)}
+              <option>Outro</option>
+            </select>
+          </label>
+          <label>
+            <span>Número de funcionários</span>
+            <select name="porte">
+              <option value="">Selecione</option>
+              <option>Até 20</option>
+              <option>De 21 a 100</option>
+              <option>De 101 a 500</option>
+              <option>Mais de 500</option>
+            </select>
+          </label>
+          <label class="full">
+            <span>Assunto</span>
+            <select name="assunto">
+              <option>Quero uma conversa inicial</option>
+              {services.map((s) => <option>{s.name}</option>)}
+            </select>
+          </label>
+          <label class="full">
+            <span>O que preocupa você hoje?</span>
+            <textarea name="mensagem" rows="5" placeholder="Ex.: recebemos um e-mail estranho, queremos nos adequar à LGPD, um cliente pediu evidências de segurança..."></textarea>
+          </label>
+        </div>
+        <p class="error" role="alert" data-wa-error hidden>Preencha seu nome e o nome da empresa para continuar.</p>
+        <button class="btn btn--light" type="submit">Abrir no WhatsApp</button>
+      </form>
+
+      <aside class="side">
+        <div class="card channel">
+          <span class="label">WhatsApp</span>
+          <a class="channel__value" href={whatsappUrl()} target="_blank" rel="noopener noreferrer">{site.whatsappDisplay}</a>
+          <p class="muted">O caminho mais rápido para agendar a conversa.</p>
+        </div>
+        {
+          site.email && (
+            <div class="card channel">
+              <span class="label">E-mail</span>
+              <a class="channel__value" href={`mailto:${site.email}`}>
+                {site.email}
+              </a>
+            </div>
+          )
+        }
+        <div class="card channel urgent">
+          <span class="label">Incidente em andamento?</span>
+          <a class="channel__value" href={whatsappUrl('Olá, estamos com um incidente de segurança e precisamos de ajuda.')} target="_blank" rel="noopener noreferrer">Pedir ajuda agora</a>
+          <p class="muted">Não desligue nem formate os computadores afetados: isso apaga evidências.</p>
+        </div>
+        <div class="card channel">
+          <span class="label">Onde estamos</span>
+          <p class="channel__value plain">{site.region}</p>
+          <p class="muted">Atendimento remoto em todo o Brasil.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<script src="../scripts/contact.ts"></script>
+
+<style>
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr);
+    gap: var(--gap);
+    align-items: start;
+  }
+  .form {
+    padding: clamp(24px, 4vw, 40px);
+  }
+  .hint {
+    margin-top: 8px;
+    font-size: var(--fs-sm);
+  }
+  .fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-block: 28px 24px;
+  }
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: var(--fs-sm);
+    color: var(--ink-2);
+  }
+  .full {
+    grid-column: 1 / -1;
+  }
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-sm);
+    background: var(--canvas);
+    color: var(--ink);
+    font-size: var(--fs-base);
+    transition: border-color var(--dur) var(--ease);
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgb(120 180 255 / 0.18);
+  }
+  input[aria-invalid='true'] {
+    border-color: var(--danger);
+  }
+  textarea {
+    resize: vertical;
+  }
+  ::placeholder {
+    color: var(--faint);
+  }
+  .error {
+    margin-bottom: 16px;
+    color: var(--danger);
+    font-size: var(--fs-sm);
+  }
+  .side {
+    display: grid;
+    gap: var(--gap);
+  }
+  .channel {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 24px;
+    border-radius: var(--r-md);
+  }
+  .channel__value {
+    font-family: var(--display);
+    font-size: var(--fs-lg);
+    color: var(--ink);
+  }
+  a.channel__value:hover {
+    color: var(--accent);
+  }
+  .channel .muted {
+    font-size: var(--fs-sm);
+  }
+  .urgent {
+    border-color: rgb(255 122 136 / 0.35);
+  }
+  .urgent .channel__value {
+    color: var(--danger);
+  }
+  @media (max-width: 900px) {
+    .layout,
+    .fields {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

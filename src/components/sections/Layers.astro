@@ -1,0 +1,196 @@
+---
+import { layers } from '../../data/layers';
+
+interface Props {
+  headingLevel?: 'h1' | 'h2';
+}
+const { headingLevel = 'h2' } = Astro.props;
+const Heading = headingLevel;
+
+const W = 400;
+const hw = 180;
+const hh = 64;
+const gap = 72;
+const top = 80;
+const H = top + gap * (layers.length - 1) + hh + 30;
+const shapes = layers.map((l, i) => {
+  const cy = top + gap * i;
+  const cx = W / 2;
+  return {
+    ...l,
+    i,
+    cy,
+    face: `M${cx - hw} ${cy} L${cx} ${cy - hh} L${cx + hw} ${cy} L${cx} ${cy + hh} Z`,
+    side: `M${cx - hw} ${cy} L${cx} ${cy + hh} L${cx + hw} ${cy} L${cx + hw} ${cy + 9} L${cx} ${cy + hh + 9} L${cx - hw} ${cy + 9} Z`,
+  };
+});
+---
+
+<section class="section bg-canvas-2 divide layers" aria-labelledby="layers-title">
+  <div class="wrap grid">
+    <div class="stack" aria-hidden="true">
+      <svg viewBox={`0 0 ${W} ${H}`}>
+        <defs>
+          <linearGradient id="layer-face" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#1c2a5c" />
+            <stop offset="1" stop-color="#121d44" />
+          </linearGradient>
+          <radialGradient id="layer-glow" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0" stop-color="#2f6fe4" stop-opacity="0.55" />
+            <stop offset="1" stop-color="#2f6fe4" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        {
+          [...shapes].reverse().map((s) => (
+            <g class="layer" data-layer={s.i}>
+              <ellipse class="layer__glow" cx={W / 2} cy={s.cy} rx={hw * 0.9} ry={hh * 1.2} fill="url(#layer-glow)" />
+              <path class="layer__side" d={s.side} />
+              <path class="layer__face" d={s.face} />
+              <text x={W / 2} y={s.i === 0 ? s.cy + 5 : s.cy + 36} text-anchor="middle">
+                {s.short.toUpperCase()}
+              </text>
+            </g>
+          ))
+        }
+      </svg>
+    </div>
+
+    <div class="content">
+      <Heading id="layers-title" class="title-3xl">O que o Sentinela verifica todo mês</Heading>
+      <p class="lead">
+        Seguimos o CIS Controls, padrão internacional de segurança mantido pelo Center for Internet Security. Ele diz o que
+        proteger primeiro; nós adaptamos à realidade da sua empresa.
+      </p>
+      <ol class="list" role="list">
+        {
+          layers.map((l, i) => (
+            <li data-layer={i}>
+              <span class="list__n">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3>{l.name}</h3>
+                <p>{l.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(40px, 6vw, 96px);
+    align-items: center;
+  }
+  .stack svg {
+    width: 100%;
+    max-width: 440px;
+    margin-inline: auto;
+    overflow: visible;
+  }
+  .layer__face {
+    fill: url(#layer-face);
+    stroke: #3a4f96;
+    stroke-width: 1;
+    transition:
+      stroke var(--dur) var(--ease),
+      fill var(--dur) var(--ease);
+  }
+  .layer__side {
+    fill: #0b1333;
+    stroke: #26346a;
+    stroke-width: 1;
+  }
+  .layer text {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    fill: #9aa8d6;
+    transition: fill var(--dur) var(--ease);
+  }
+  .layer__glow {
+    opacity: 0;
+    transition: opacity var(--dur) var(--ease);
+  }
+  .layer[data-layer='0'] .layer__glow {
+    opacity: 0.8;
+  }
+  .lead {
+    margin-top: 18px;
+  }
+  .list {
+    margin-top: 36px;
+    border-top: 1px solid var(--line);
+  }
+  .list li {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    padding-block: 18px;
+    border-bottom: 1px solid var(--line);
+    cursor: default;
+    outline-offset: -2px;
+  }
+  .list__n {
+    padding-top: 5px;
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    color: var(--accent);
+  }
+  .list h3 {
+    font-size: var(--fs-md);
+    transition: color var(--dur) var(--ease);
+  }
+  .list p {
+    margin-top: 4px;
+    font-size: var(--fs-sm);
+    color: var(--muted);
+  }
+  .list li:hover h3,
+  .list li:focus-visible h3 {
+    color: var(--accent);
+  }
+  /* list ↔ stack: hovering an item lights its layer */
+  .layers:has(.list li:hover) .layer[data-layer='0'] .layer__glow {
+    opacity: 0;
+  }
+</style>
+
+<style is:global>
+  /* generated selectors for the six layers */
+  .layers:has(.list li[data-layer='0']:is(:hover, :focus-visible)) .layer[data-layer='0'] .layer__glow,
+  .layers:has(.list li[data-layer='1']:is(:hover, :focus-visible)) .layer[data-layer='1'] .layer__glow,
+  .layers:has(.list li[data-layer='2']:is(:hover, :focus-visible)) .layer[data-layer='2'] .layer__glow,
+  .layers:has(.list li[data-layer='3']:is(:hover, :focus-visible)) .layer[data-layer='3'] .layer__glow,
+  .layers:has(.list li[data-layer='4']:is(:hover, :focus-visible)) .layer[data-layer='4'] .layer__glow,
+  .layers:has(.list li[data-layer='5']:is(:hover, :focus-visible)) .layer[data-layer='5'] .layer__glow {
+    opacity: 0.9 !important;
+  }
+  .layers:has(.list li[data-layer='0']:is(:hover, :focus-visible)) .layer[data-layer='0'] .layer__face,
+  .layers:has(.list li[data-layer='1']:is(:hover, :focus-visible)) .layer[data-layer='1'] .layer__face,
+  .layers:has(.list li[data-layer='2']:is(:hover, :focus-visible)) .layer[data-layer='2'] .layer__face,
+  .layers:has(.list li[data-layer='3']:is(:hover, :focus-visible)) .layer[data-layer='3'] .layer__face,
+  .layers:has(.list li[data-layer='4']:is(:hover, :focus-visible)) .layer[data-layer='4'] .layer__face,
+  .layers:has(.list li[data-layer='5']:is(:hover, :focus-visible)) .layer[data-layer='5'] .layer__face {
+    stroke: #78b4ff;
+  }
+  .layers:has(.list li[data-layer='0']:is(:hover, :focus-visible)) .layer[data-layer='0'] text,
+  .layers:has(.list li[data-layer='1']:is(:hover, :focus-visible)) .layer[data-layer='1'] text,
+  .layers:has(.list li[data-layer='2']:is(:hover, :focus-visible)) .layer[data-layer='2'] text,
+  .layers:has(.list li[data-layer='3']:is(:hover, :focus-visible)) .layer[data-layer='3'] text,
+  .layers:has(.list li[data-layer='4']:is(:hover, :focus-visible)) .layer[data-layer='4'] text,
+  .layers:has(.list li[data-layer='5']:is(:hover, :focus-visible)) .layer[data-layer='5'] text {
+    fill: #fff;
+  }
+  @media (max-width: 900px) {
+    .layers .grid {
+      grid-template-columns: 1fr !important;
+    }
+    .layers .stack {
+      order: 2;
+      max-width: 360px;
+    }
+  }
+</style>

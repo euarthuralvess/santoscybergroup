@@ -1,0 +1,100 @@
+---
+import { sectors, sectorHref } from '../../data/sectors';
+interface Props {
+  headingLevel?: 'h1' | 'h2';
+  showHead?: boolean;
+}
+const { headingLevel = 'h2', showHead = true } = Astro.props;
+const Heading = headingLevel;
+---
+
+<section class="section bg-canvas" aria-labelledby={showHead ? 'sectors-title' : undefined} aria-label={showHead ? undefined : 'Setores'}>
+  <div class="wrap">
+    {
+      showHead && (
+        <div class="head">
+          <div class="section-head">
+            <Heading id="sectors-title" class="title-3xl">
+              Empresas que têm dados valiosos e nenhum time para protegê-los.
+            </Heading>
+          </div>
+          <p class="lead">Cada setor guarda um tipo de informação e responde a um tipo de exigência. O método é o mesmo; as prioridades mudam.</p>
+        </div>
+      )
+    }
+    <ul class="grid" role="list">
+      {
+        sectors.map((s) => (
+          <li class="card sector">
+            <h3>
+              <a href={sectorHref(s)}>{s.name}</a>
+            </h3>
+            <p>{s.stake}</p>
+            <span class="more" aria-hidden="true">
+              Ver riscos do setor
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 24px clamp(32px, 6vw, 80px);
+    align-items: end;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gap);
+    margin-top: clamp(40px, 5vw, 56px);
+  }
+  .sector {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 28px;
+    border-radius: var(--r-md);
+    transition:
+      border-color var(--dur) var(--ease),
+      background-color var(--dur) var(--ease);
+  }
+  .sector:hover {
+    border-color: rgb(120 180 255 / 0.5);
+  }
+  h3 {
+    font-size: var(--fs-lg);
+  }
+  h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+  .sector p {
+    font-size: var(--fs-sm);
+    color: var(--muted);
+  }
+  .more {
+    margin-top: auto;
+    padding-top: 12px;
+    font-size: var(--fs-sm);
+  }
+  @media (max-width: 900px) {
+    .head {
+      grid-template-columns: 1fr;
+    }
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 600px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,159 @@
+---
+import { services, serviceHref } from '../../data/services';
+import { whatsappUrl } from '../../data/site';
+
+interface Props {
+  headingLevel?: 'h1' | 'h2';
+  showHead?: boolean;
+}
+const { headingLevel = 'h2', showHead = true } = Astro.props;
+const Heading = headingLevel;
+const order = ['sentinela-pme', 'raio-x-de-seguranca', 'vciso-fracionado', 'resposta-a-incidentes'];
+const list = order.map((slug) => services.find((s) => s.slug === slug)!);
+---
+
+<section class="section bg-canvas" aria-labelledby={showHead ? 'services-title' : undefined} aria-label={showHead ? undefined : 'Serviços'}>
+  <div class="wrap">
+    {
+      showHead && (
+        <div class="head">
+          <div class="section-head">
+            <Heading id="services-title" class="title-3xl">
+              Quatro formas de proteger o seu negócio.
+            </Heading>
+            <p class="lead">
+              Escopo fixo, entrega clara e sem jargão. Começamos com uma conversa gratuita e o Raio-X, e crescemos conforme a
+              necessidade da sua empresa.
+            </p>
+          </div>
+        </div>
+      )
+    }
+
+    <ul class="grid" role="list">
+      {
+        list.map((s) => (
+          <li class:list={['card', 'svc', { 'svc--main': s.route === 'recorrente', 'svc--urgent': s.route === 'emergencia' }]}>
+            <div class="svc__top">
+              <span class="label">{s.format}</span>
+              {s.route === 'recorrente' && <span class="flag">Carro-chefe</span>}
+              {s.route === 'emergencia' && <span class="flag flag--urgent">Urgente</span>}
+            </div>
+            <h3 class="svc__name">
+              <a href={serviceHref(s)}>{s.name}</a>
+            </h3>
+            <p class="svc__promise">{s.promise}</p>
+            <p class="svc__summary">{s.summary}</p>
+            <ul class="checks">
+              {s.deliverables.slice(0, 3).map((d) => (
+                <li>{d}</li>
+              ))}
+            </ul>
+            <div class="svc__foot">
+              <span class="more" aria-hidden="true">
+                Saiba mais
+              </span>
+              {s.route === 'emergencia' && (
+                <a class="svc__wa" href={whatsappUrl('Olá, estamos com um incidente de segurança e precisamos de ajuda.')} target="_blank" rel="noopener noreferrer">
+                  Pedir ajuda agora
+                </a>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap);
+    margin-top: clamp(40px, 5vw, 56px);
+  }
+  .svc {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(24px, 3vw, 36px);
+    transition:
+      border-color var(--dur) var(--ease),
+      transform var(--dur) var(--ease);
+  }
+  .svc:hover {
+    border-color: var(--line-strong);
+  }
+  .svc--main {
+    border-color: rgb(120 180 255 / 0.45);
+    background:
+      radial-gradient(80% 60% at 100% 0%, rgb(47 111 228 / 0.22), transparent 70%),
+      linear-gradient(180deg, var(--surface), #0e1530);
+  }
+  .svc__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .flag {
+    padding: 4px 10px;
+    border-radius: var(--pill);
+    background: var(--accent-tint);
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  .flag--urgent {
+    background: var(--danger-tint);
+    color: var(--danger);
+  }
+  .svc__name {
+    margin-top: 18px;
+    font-size: var(--fs-2xl);
+    font-weight: 400;
+  }
+  .svc__name a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+  .svc__promise {
+    margin-top: 8px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .svc__summary {
+    margin-top: 12px;
+    font-size: var(--fs-sm);
+    color: var(--muted);
+  }
+  .checks {
+    margin-top: 22px;
+    font-size: var(--fs-sm);
+  }
+  .svc__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-top: auto;
+    padding-top: 28px;
+  }
+  .svc__wa {
+    position: relative;
+    z-index: 1;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--danger);
+  }
+  .svc__wa:hover {
+    text-decoration: underline;
+  }
+  @media (max-width: 860px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

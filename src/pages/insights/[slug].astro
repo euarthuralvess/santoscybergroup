@@ -1,0 +1,117 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import CtaBand from '../../components/sections/CtaBand.astro';
+import { formatDate } from '../../lib/format';
+import { founder } from '../../data/site';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('insights', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+interface Props {
+  post: CollectionEntry<'insights'>;
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+const crumbs = [
+  { name: 'Insights', href: '/insights' },
+  { name: post.data.title, href: `/insights/${post.id}` },
+];
+const others = (await getCollection('insights', ({ data, id }) => !data.draft && id !== post.id))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 2);
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  breadcrumbs={crumbs}
+  article={{
+    headline: post.data.title,
+    description: post.data.description,
+    datePublished: post.data.date.toISOString(),
+    dateModified: (post.data.updated ?? post.data.date).toISOString(),
+  }}
+>
+  <PageHero eyebrow={post.data.category} title={post.data.title} lead={post.data.description} crumbs={crumbs} seed={100}>
+    <p class="meta mono">
+      <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time> · {founder.shortName}
+    </p>
+  </PageHero>
+  <section class="section bg-canvas">
+    <div class="wrap article">
+      <article class="prose">
+        <Content />
+      </article>
+      <aside class="aside">
+        {
+          others.length > 0 && (
+            <div class="card related">
+              <span class="label">Leia também</span>
+              <ul role="list">
+                {others.map((o) => (
+                  <li>
+                    <a href={`/insights/${o.id}`}>{o.data.title}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </aside>
+    </div>
+  </section>
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .meta {
+    margin-top: 24px;
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .article {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: clamp(40px, 6vw, 88px);
+    align-items: start;
+  }
+  .prose {
+    font-size: var(--fs-md);
+    line-height: 1.7;
+  }
+  .aside {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+  }
+  .related {
+    padding: 24px;
+    border-radius: var(--r-md);
+  }
+  .related li {
+    padding-block: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .related li:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .related a {
+    font-weight: 500;
+  }
+  .related a:hover {
+    color: var(--accent);
+  }
+  @media (max-width: 900px) {
+    .article {
+      grid-template-columns: 1fr;
+    }
+    .aside {
+      position: static;
+    }
+  }
+</style>

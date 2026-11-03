@@ -1,0 +1,56 @@
+---
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import Constellation from '../art/Constellation.astro';
+import type { Crumb } from '../../lib/seo';
+
+interface Props {
+  title: string;
+  lead?: string;
+  crumbs: Crumb[];
+  eyebrow?: string;
+  seed?: number;
+}
+const { title, lead, crumbs, eyebrow, seed = 3 } = Astro.props;
+---
+
+<section class="page-hero">
+  <Constellation count={80} bias={0.6} seed={seed} />
+  <div class="wrap inner">
+    <Breadcrumbs items={crumbs} />
+    <div class="text">
+      {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+      <h1 class="title-hero">{title}</h1>
+      {lead && <p class="lead">{lead}</p>}
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    position: relative;
+    overflow: hidden;
+    margin-top: calc(-1 * var(--header-h));
+    padding-top: calc(var(--header-h) + clamp(40px, 5vw, 64px));
+    padding-bottom: clamp(64px, 8vw, 112px);
+    background:
+      radial-gradient(55% 80% at 85% 20%, rgb(40 70 200 / 0.32), transparent 70%),
+      linear-gradient(180deg, var(--night), #071040 70%, var(--canvas));
+  }
+  .inner {
+    position: relative;
+  }
+  .text {
+    margin-top: clamp(40px, 5vw, 64px);
+    max-width: 820px;
+  }
+  h1 {
+    max-width: 18ch;
+  }
+  .lead {
+    margin-top: 22px;
+  }
+  .text :global(.btn) {
+    margin-top: 32px;
+  }
+</style>

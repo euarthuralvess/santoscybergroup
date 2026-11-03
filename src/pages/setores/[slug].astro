@@ -1,0 +1,209 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import CtaBand from '../../components/sections/CtaBand.astro';
+import Button from '../../components/ui/Button.astro';
+import { sectors, sectorHref, type Sector } from '../../data/sectors';
+import { serviceBySlug, serviceHref } from '../../data/services';
+import { whatsappUrl } from '../../data/site';
+
+export function getStaticPaths() {
+  return sectors.map((sector, index) => ({ params: { slug: sector.slug }, props: { sector, index } }));
+}
+interface Props {
+  sector: Sector;
+  index: number;
+}
+const { sector, index } = Astro.props;
+const crumbs = [
+  { name: 'Setores', href: '/setores' },
+  { name: sector.name, href: sectorHref(sector) },
+];
+const route = sector.start.map((slug) => serviceBySlug(slug)!).filter(Boolean);
+const others = sectors.filter((s) => s.slug !== sector.slug);
+const message = `Olá, tenho uma empresa do setor de ${sector.name.toLowerCase()} e quero conversar sobre segurança.`;
+---
+
+<BaseLayout
+  title={sector.seo.title}
+  description={sector.seo.description}
+  breadcrumbs={crumbs}
+  pageServices={route.map((s) => ({ name: `${s.name} para ${sector.name.toLowerCase()}`, description: s.summary, url: sectorHref(sector) }))}
+>
+  <PageHero eyebrow="Cibersegurança por setor" title={sector.name} lead={sector.intro} crumbs={crumbs} seed={40 + index}>
+    <Button href={whatsappUrl(message)} external>Conversar sobre o meu caso</Button>
+  </PageHero>
+
+  <section class="section bg-canvas" aria-labelledby="risks-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Onde o risco costuma estar</span>
+        <h2 id="risks-title" class="title-3xl">{sector.stake}</h2>
+      </div>
+      <ul class="risks" role="list">
+        {
+          sector.risks.map((r, i) => (
+            <li class="card">
+              <span class="label">Risco {String(i + 1).padStart(2, '0')}</span>
+              <h3>{r.title}</h3>
+              <p>{r.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section bg-night divide" aria-labelledby="law-title">
+    <div class="wrap law">
+      <div>
+        <span class="eyebrow">O que a lei pede</span>
+        <h2 id="law-title" class="title-2xl">Segurança também é obrigação.</h2>
+        <p class="muted small">Resumo das referências legais. Não substitui a orientação do seu advogado.</p>
+      </div>
+      <ul class="obligations" role="list">
+        {sector.obligations.map((o) => <li>{o}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section bg-canvas-2" aria-labelledby="start-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Por onde começar</span>
+        <h2 id="start-title" class="title-3xl">O caminho que recomendamos para o seu setor.</h2>
+      </div>
+      <ol class="route" role="list">
+        {
+          route.map((s, i) => (
+            <li class="card">
+              <span class="n mono" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <span class="label">{s.format}</span>
+              <h3>
+                <a href={serviceHref(s)}>{s.name}</a>
+              </h3>
+              <p>{s.promise}</p>
+              <span class="more" aria-hidden="true">
+                Saiba mais
+              </span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section bg-canvas divide" aria-labelledby="other-title">
+    <div class="wrap">
+      <h2 id="other-title" class="label">Outros setores</h2>
+      <ul class="chips" role="list">
+        {others.map((s) => <li><a href={sectorHref(s)}>{s.name}</a></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand message={message} />
+</BaseLayout>
+
+<style>
+  .risks,
+  .route {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gap);
+    margin-top: clamp(40px, 5vw, 56px);
+  }
+  .risks li,
+  .route li {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 28px;
+  }
+  .risks h3,
+  .route h3 {
+    margin-top: 8px;
+    font-size: var(--fs-lg);
+  }
+  .risks p,
+  .route p {
+    font-size: var(--fs-sm);
+    color: var(--muted);
+  }
+  .law {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 40px clamp(40px, 6vw, 88px);
+  }
+  .small {
+    margin-top: 16px;
+    font-size: var(--fs-sm);
+  }
+  .obligations li {
+    padding: 22px 0 22px 28px;
+    border-top: 1px solid var(--line);
+    position: relative;
+    color: var(--ink-2);
+  }
+  .obligations li:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  .obligations li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 32px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .n {
+    font-size: var(--fs-2xs);
+    color: var(--accent);
+  }
+  .route li {
+    transition: border-color var(--dur) var(--ease);
+  }
+  .route li:hover {
+    border-color: var(--line-strong);
+  }
+  .route h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+  .route .more {
+    margin-top: auto;
+    padding-top: 10px;
+    font-size: var(--fs-sm);
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .chips a {
+    display: inline-block;
+    padding: 10px 16px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--pill);
+    font-size: var(--fs-sm);
+    transition:
+      border-color var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+  }
+  .chips a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  @media (max-width: 900px) {
+    .risks,
+    .route,
+    .law {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

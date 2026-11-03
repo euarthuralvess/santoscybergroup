@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import { site, whatsappUrl } from '../data/site';
+
+const crumbs = [{ name: 'Privacidade', href: '/privacidade' }];
+const updated = '3 de novembro de 2026';
+const controller = [
+  site.legalName || site.name,
+  site.tradeName && `nome fantasia ${site.tradeName}`,
+  site.cnpj && `CNPJ ${site.cnpj}`,
+]
+  .filter(Boolean)
+  .join(', ');
+---
+
+<BaseLayout
+  title="Política de privacidade"
+  description="Como a Santos Cyber Group trata dados pessoais neste site e no atendimento, de acordo com a LGPD."
+  breadcrumbs={crumbs}
+>
+  <PageHero eyebrow="Privacidade" title="Política de privacidade" lead={`Atualizada em ${updated}.`} crumbs={crumbs} seed={81} />
+  <section class="section bg-canvas">
+    <div class="wrap">
+      <div class="prose">
+        <p>
+          Quem vende segurança precisa praticar o que vende. Este site foi construído para coletar o mínimo possível de dados
+          pessoais, e esta política explica, em linguagem simples, o que acontece com eles.
+        </p>
+
+        <h2>Quem é o controlador</h2>
+        <p>
+          {controller}, com sede em {site.region}. Para qualquer assunto de privacidade, fale conosco pelo
+          {' '}<a href={whatsappUrl('Olá, tenho uma dúvida sobre privacidade e dados pessoais.')}>WhatsApp</a>{site.email && <> ou pelo e-mail <a href={`mailto:${site.email}`}>{site.email}</a></>}.
+        </p>
+
+        <h2>O que este site coleta</h2>
+        <ul>
+          <li><strong>Nenhum cookie de rastreamento ou publicidade.</strong> O site não usa ferramentas de anúncio nem pixels de redes sociais.</li>
+          <li><strong>Formulário de contato.</strong> O formulário não envia dados para o nosso servidor: ele monta uma mensagem e abre o WhatsApp no seu aparelho. Você decide se envia.</li>
+          <li><strong>Registros técnicos de acesso.</strong> O provedor de hospedagem pode registrar dados técnicos, como endereço IP e navegador, para segurança e funcionamento do serviço.</li>
+          <li><strong>Fontes e arquivos.</strong> Todas as fontes e arquivos são servidos pelo próprio site, sem chamadas a serviços de terceiros.</li>
+        </ul>
+
+        <h2>Dados que você nos envia no atendimento</h2>
+        <p>
+          Quando você fala conosco pelo WhatsApp, e-mail ou outro canal, usamos seu nome, empresa e contato para responder e
+          prestar o serviço contratado. A base legal é a execução de contrato ou de procedimentos preliminares a pedido do
+          titular (LGPD, art. 7º, V).
+        </p>
+
+        <h2>Dados de clientes durante os serviços</h2>
+        <p>
+          Em serviços como o Raio-X, o Sentinela e a Resposta a Incidentes, podemos ter acesso a informações dos ambientes
+          dos clientes. Esse tratamento segue o contrato de cada cliente, com acesso restrito ao necessário, e os dados não
+          são usados para nenhuma outra finalidade.
+        </p>
+
+        <h2>Seus direitos</h2>
+        <p>
+          A LGPD garante a você, entre outros, o direito de confirmar se tratamos seus dados, acessá-los, corrigi-los,
+          pedir a eliminação e revogar o consentimento (art. 18). Para exercer qualquer um deles, fale conosco pelos canais
+          acima.
+        </p>
+
+        <h2>Segurança</h2>
+        <p>
+          O site é estático, servido com HTTPS e cabeçalhos de segurança, e não tem banco de dados nem área de login. Se você
+          encontrar uma vulnerabilidade, veja como reportar em <a href="/.well-known/security.txt">security.txt</a>.
+        </p>
+
+        <h2>Mudanças nesta política</h2>
+        <p>Quando esta política mudar, a data no topo da página será atualizada.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

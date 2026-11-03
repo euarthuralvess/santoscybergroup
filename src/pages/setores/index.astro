@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import Sectors from '../../components/sections/Sectors.astro';
+import Layers from '../../components/sections/Layers.astro';
+import CtaBand from '../../components/sections/CtaBand.astro';
+
+const crumbs = [{ name: 'Setores', href: '/setores' }];
+---
+
+<BaseLayout
+  title="Cibersegurança por setor: saúde, contabilidade, e-commerce, indústria, advocacia e construção"
+  description="Os riscos e as exigências de segurança de cada setor: clínicas, escritórios contábeis, lojas virtuais, indústria e logística, advocacia e construção civil."
+  breadcrumbs={crumbs}
+>
+  <PageHero
+    eyebrow="Para quem"
+    title="Empresas que têm dados valiosos e nenhum time para protegê-los."
+    lead="Cada setor guarda um tipo de informação e responde a um tipo de exigência. O método é o mesmo; as prioridades mudam."
+    crumbs={crumbs}
+    seed={31}
+  />
+  <Sectors showHead={false} />
+  <Layers />
+  <CtaBand />
+</BaseLayout>

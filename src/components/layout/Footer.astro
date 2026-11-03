@@ -1,0 +1,118 @@
+---
+import Logo from '../ui/Logo.astro';
+import { site, whatsappUrl } from '../../data/site';
+import { services, serviceHref } from '../../data/services';
+import { sectors, sectorHref } from '../../data/sectors';
+
+const year = new Date().getFullYear();
+const legalLine = [site.legalName, site.tradeName, site.cnpj && `CNPJ ${site.cnpj}`].filter(Boolean).join(' · ');
+---
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="top">
+      <div class="identity">
+        <a href="/" aria-label="Santos Cyber Group, página inicial"><Logo size={42} /></a>
+        <p class="text-2">
+          Segurança com experiência enterprise para pequenas e médias empresas. {site.region}, atendimento remoto em todo o
+          Brasil.
+        </p>
+        <a class="btn btn--outline btn--sm" href={whatsappUrl()} target="_blank" rel="noopener noreferrer">WhatsApp {site.whatsappDisplay}</a>
+      </div>
+
+      <nav class="cols" aria-label="Rodapé">
+        <div>
+          <h2 class="label">Serviços</h2>
+          <ul role="list">{services.map((s) => <li><a href={serviceHref(s)}>{s.name}</a></li>)}</ul>
+        </div>
+        <div>
+          <h2 class="label">Setores</h2>
+          <ul role="list">{sectors.map((s) => <li><a href={sectorHref(s)}>{s.name}</a></li>)}</ul>
+        </div>
+        <div>
+          <h2 class="label">Empresa</h2>
+          <ul role="list">
+            <li><a href="/metodo">Método</a></li>
+            <li><a href="/sobre">Sobre</a></li>
+            <li><a href="/insights">Insights</a></li>
+            <li><a href="/contato">Contato</a></li>
+            <li><a href={site.social.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <div class="bottom">
+      <p>© {year} {site.name}{legalLine && ` · ${legalLine}`}</p>
+      <ul role="list">
+        <li><a href="/privacidade">Política de privacidade</a></li>
+        <li><a href="/.well-known/security.txt">Reportar vulnerabilidade</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: clamp(64px, 7vw, 96px) 28px;
+    background: var(--night);
+    border-top: 1px solid var(--line-soft);
+  }
+  .top {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 48px var(--gap);
+    padding-bottom: clamp(48px, 6vw, 72px);
+  }
+  .identity p {
+    margin-block: 20px 24px;
+    max-width: 38ch;
+    font-size: var(--fs-sm);
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px var(--gap);
+  }
+  .cols h2 {
+    margin-bottom: 16px;
+  }
+  .cols li + li {
+    margin-top: 10px;
+  }
+  .cols a {
+    font-size: var(--fs-sm);
+    color: var(--ink-2);
+    transition: color var(--dur) var(--ease);
+  }
+  .cols a:hover {
+    color: #fff;
+  }
+  .bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: var(--fs-xs);
+    color: var(--muted);
+  }
+  .bottom ul {
+    display: flex;
+    gap: 24px;
+  }
+  .bottom a:hover {
+    color: var(--ink);
+  }
+  @media (max-width: 900px) {
+    .top {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .cols {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,61 @@
+---
+import Button from '../ui/Button.astro';
+import Constellation from '../art/Constellation.astro';
+import { whatsappUrl } from '../../data/site';
+
+interface Props {
+  title?: string;
+  text?: string;
+  message?: string;
+}
+const {
+  title = 'Comece com uma conversa gratuita.',
+  text = 'Você conta como a empresa funciona hoje. Nós dizemos, sem compromisso, por onde começar.',
+  message,
+} = Astro.props;
+---
+
+<section class="cta" aria-labelledby="cta-title">
+  <Constellation count={70} bias={0.5} seed={21} />
+  <div class="wrap inner">
+    <h2 id="cta-title" class="title-3xl">{title}</h2>
+    <p class="lead">{text}</p>
+    <div class="actions">
+      <Button href={whatsappUrl(message)} external>Agendar pelo WhatsApp</Button>
+      <Button href="/contato" variant="outline">Enviar uma mensagem</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(96px, 11vw, 160px);
+    background:
+      radial-gradient(50% 80% at 50% 100%, rgb(47 111 228 / 0.35), transparent 70%),
+      var(--night);
+    border-top: 1px solid var(--line-soft);
+    text-align: center;
+  }
+  .inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  h2 {
+    max-width: 18ch;
+  }
+  .lead {
+    margin-top: 18px;
+    max-width: 46ch;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 36px;
+  }
+</style>

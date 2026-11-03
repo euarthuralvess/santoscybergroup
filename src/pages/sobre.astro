@@ -1,0 +1,254 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import Credentials from '../components/sections/Credentials.astro';
+import Testimonials from '../components/sections/Testimonials.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
+import portrait from '../assets/images/arthur.jpg';
+import { founder, site, clients } from '../data/site';
+
+const crumbs = [{ name: 'Sobre', href: '/sobre' }];
+---
+
+<BaseLayout
+  title="Sobre a Santos Cyber Group e Arthur Alves dos Santos"
+  description="A Santos Cyber Group leva experiência de Blue Team corporativo para pequenas e médias empresas. Conheça o fundador, a trajetória, a formação e as palestras."
+  breadcrumbs={crumbs}
+>
+  <PageHero
+    eyebrow="Sobre"
+    title="Segurança enterprise, no tamanho da sua empresa."
+    lead="A pequena e média empresa sofre os mesmos ataques que a grande, mas não tem como pagar um time de segurança. A Santos Cyber Group existe para resolver isso."
+    crumbs={crumbs}
+    seed={61}
+  />
+
+  <section class="section bg-canvas" aria-labelledby="founder-title">
+    <div class="wrap founder">
+      <div class="photo-wrap">
+        <Image src={portrait} alt={`Retrato de ${founder.name}`} width={480} height={480} class="photo" />
+        <div class="links">
+          <a class="btn btn--outline btn--sm" href={site.social.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a class="btn btn--outline btn--sm" href={site.social.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+      </div>
+      <div>
+        <span class="eyebrow">Fundador</span>
+        <h2 id="founder-title" class="title-3xl">{founder.name}</h2>
+        <p class="role muted">{founder.role}</p>
+        <div class="prose">
+          <p>
+            Defendo ambientes corporativos todos os dias e fundei a Santos Cyber Group para resolver um problema que vejo o
+            tempo todo: a pequena e média empresa sofre os mesmos ataques que a grande, mas não tem como pagar um time de
+            segurança.
+          </p>
+          <p>
+            Trago a disciplina de quem defende grandes operações para empresas do seu porte, com ferramentas que cabem no seu
+            orçamento. Sem jargão e sem vender medo: só proteção que faz sentido para o seu negócio.
+          </p>
+        </div>
+
+        <h3 class="label sub">Trajetória</h3>
+        <ol class="timeline" role="list">
+          {
+            founder.career.map((c) => (
+              <li>
+                <span class="mono when">{c.period}</span>
+                <div>
+                  <strong>{c.org}</strong>
+                  <span class="muted"> · {c.role}</span>
+                  <p>{c.text}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <Credentials />
+
+  <section class="section bg-canvas divide" aria-labelledby="talks-title">
+    <div class="wrap talks">
+      <div>
+        <span class="eyebrow">Palestras e comunidade</span>
+        <h2 id="talks-title" class="title-2xl">Onde compartilhamos conhecimento.</h2>
+        <ul class="chips" role="list" aria-label="Comunidades">
+          {founder.communities.map((c) => <li>{c}</li>)}
+        </ul>
+      </div>
+      <ol class="talk-list" role="list">
+        {
+          founder.talks.map((t) => (
+            <li>
+              <span class="mono when">{t.year}</span>
+              <div>
+                <strong>{t.title}</strong>
+                <p class="muted">{t.event}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section bg-canvas-2 divide" aria-labelledby="edu-title">
+    <div class="wrap talks">
+      <div>
+        <span class="eyebrow">Formação acadêmica</span>
+        <h2 id="edu-title" class="title-2xl">Base técnica e de gestão.</h2>
+      </div>
+      <ul class="talk-list" role="list">
+        {
+          founder.education.map((e) => (
+            <li>
+              <span class="mono when">{e.status}</span>
+              <div>
+                <strong>{e.name}</strong>
+                {e.school && <p class="muted">{e.school}</p>}
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <Testimonials />
+
+  <section class="section bg-night divide" aria-labelledby="clients-title">
+    <div class="wrap">
+      <span class="eyebrow">Clientes atendidos</span>
+      <h2 id="clients-title" class="sr-only">Clientes atendidos</h2>
+      <ul class="client-list" role="list">
+        {
+          clients.map((c) => (
+            <li>
+              <span>{c.name}</span>
+              <span class="muted mono">{c.country}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .founder {
+    display: grid;
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+    gap: 48px clamp(40px, 6vw, 88px);
+    align-items: start;
+  }
+  .photo-wrap {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+  }
+  .photo-wrap :global(.photo) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--r-lg);
+    border: 1px solid var(--line);
+  }
+  .links {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .role {
+    margin-top: 8px;
+  }
+  .prose {
+    margin-top: 24px;
+    font-size: var(--fs-md);
+  }
+  .sub {
+    margin-top: 48px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .timeline li,
+  .talk-list li {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 16px;
+    padding-block: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .when {
+    padding-top: 3px;
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .timeline p,
+  .talk-list p {
+    margin-top: 4px;
+    font-size: var(--fs-sm);
+    color: var(--muted);
+  }
+  .talks {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 40px clamp(40px, 6vw, 88px);
+  }
+  .talk-list {
+    border-top: 1px solid var(--line);
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 24px;
+  }
+  .chips li {
+    padding: 8px 14px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--pill);
+    font-size: var(--fs-sm);
+  }
+  .client-list {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--gap);
+    margin-top: 24px;
+  }
+  .client-list li {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font-family: var(--display);
+    font-size: var(--fs-lg);
+    font-weight: 500;
+  }
+  .client-list .mono {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  @media (max-width: 900px) {
+    .founder,
+    .talks {
+      grid-template-columns: 1fr;
+    }
+    .photo-wrap {
+      position: static;
+      max-width: 360px;
+    }
+    .client-list {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

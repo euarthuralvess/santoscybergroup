@@ -1,0 +1,172 @@
+---
+/**
+ * Hero visual: the shield globe (canvas, full hero) anchored on this box, a
+ * live feed of blocked threats and a status chip. Labelled as a simulation.
+ */
+const rows = [
+  { time: '14:29', what: 'E-mail falso com link', status: 'Bloqueado' },
+  { time: '14:26', what: 'Login fora do horário', status: 'Verificado' },
+  { time: '14:21', what: 'Varredura de portas', status: 'Bloqueado' },
+];
+---
+
+<div class="globe-box" data-globe-anchor>
+  <span class="chip" aria-hidden="true"><span class="live"></span>Sentinela ativo</span>
+
+  <div class="feed" data-feed aria-label="Simulação do monitoramento: ameaças bloqueadas" role="img">
+    <div class="feed__head">
+      <span>Monitoramento</span>
+      <span class="sim">Simulação</span>
+    </div>
+    <p class="feed__count"><span data-feed-count>27</span> ameaças bloqueadas hoje</p>
+    <ol role="list">
+      {
+        rows.map((r) => (
+          <li>
+            <time>{r.time}</time>
+            <span class="what">{r.what}</span>
+            <span class:list={[r.status === 'Bloqueado' ? 'ok' : 'seen']}>{r.status}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</div>
+
+<script src="../../scripts/feed.ts"></script>
+
+<style>
+  .globe-box {
+    position: relative;
+    aspect-ratio: 1;
+    width: 100%;
+    max-width: 560px;
+    margin-left: auto;
+  }
+  .chip {
+    position: absolute;
+    top: 6%;
+    right: 2%;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    border: 1px solid rgb(120 180 255 / 0.3);
+    border-radius: var(--pill);
+    background: rgb(8 16 52 / 0.7);
+    backdrop-filter: blur(8px);
+    font-size: var(--fs-xs);
+    color: var(--ink);
+  }
+  .live {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ok);
+    box-shadow: 0 0 0 4px rgb(73 211 154 / 0.18);
+  }
+  .feed {
+    position: absolute;
+    left: -8%;
+    bottom: 2%;
+    width: min(330px, 78%);
+    padding: 16px 16px 10px;
+    border: 1px solid rgb(120 180 255 / 0.22);
+    border-radius: var(--r-md);
+    background: linear-gradient(180deg, rgb(18 28 70 / 0.82), rgb(8 14 44 / 0.88));
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.6);
+  }
+  .feed__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    color: var(--ink-2);
+  }
+  .sim {
+    padding: 2px 8px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--pill);
+    font-size: 0.6875rem;
+    color: var(--muted);
+  }
+  .feed__count {
+    margin: 8px 0 10px;
+    font-family: var(--display);
+    font-size: 1.125rem;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .feed__count span {
+    color: var(--accent);
+  }
+  ol {
+    overflow: hidden;
+  }
+  :global(.feed li) {
+    display: grid;
+    grid-template-columns: 44px 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding-block: 8px;
+    border-top: 1px solid rgb(120 180 255 / 0.12);
+    font-size: 0.8125rem;
+  }
+  :global(.feed li time) {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  :global(.feed li .what) {
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  :global(.feed li .ok) {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--ok);
+  }
+  :global(.feed li .seen) {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--accent);
+  }
+  :global(.feed li.is-new) {
+    animation: feed-in 0.5s var(--ease) both;
+  }
+  @keyframes feed-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+      background: rgb(73 211 154 / 0.12);
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .live {
+      animation: live 2s ease-in-out infinite;
+    }
+  }
+  @keyframes live {
+    50% {
+      box-shadow: 0 0 0 7px rgb(73 211 154 / 0.04);
+    }
+  }
+  @media (max-width: 980px) {
+    .globe-box {
+      max-width: 440px;
+      margin: 0 auto 210px;
+    }
+    .feed {
+      top: 86%;
+      bottom: auto;
+      left: 0;
+      right: 0;
+      width: auto;
+    }
+  }
+</style>

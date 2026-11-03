@@ -1,0 +1,77 @@
+/*
+ * Design tokens: Santos Cyber Group
+ *
+ * Night-sky navy in layers, from the deepest (hero, certifications, partners)
+ * to raised surfaces (cards, mockups). One blue carries the brand: the blue of
+ * the SG shield. Amber, green and red appear only as status inside the
+ * illustrative product mockups (priority, done, critical), never as decoration.
+ */
+:root {
+  /* surfaces, darkest to lightest */
+  --night: #050b2e;
+  --night-2: #0a1440;
+  --canvas: #0a1022;
+  --canvas-2: #0f1730;
+  --surface: #121a34;
+  --surface-2: #18223f;
+  --surface-3: #1f2a4b;
+
+  /* lines */
+  --line: #232d4d;
+  --line-soft: rgb(255 255 255 / 0.06);
+  --line-strong: #34406a;
+
+  /* text */
+  --ink: #e8ecf8;
+  --ink-2: #b4bdd8;
+  --muted: #8a94b4;
+  --faint: #5c6688;
+
+  /* brand blue (the SG shield) */
+  --brand: #2f6fe4;
+  --brand-hover: #3b7cf2;
+  --accent: #78b4ff; /* blue for text and lines on night */
+  --accent-tint: #142650;
+  --accent-glow: rgb(47 111 228 / 0.35);
+
+  /* status, mockups only */
+  --alert: #f2a93b;
+  --alert-tint: #2e2412;
+  --ok: #49d39a;
+  --ok-tint: #0f2b25;
+  --danger: #ff7a88;
+  --danger-tint: #3a1622;
+  --whatsapp: #1f8f5f;
+
+  /* type */
+  --display: 'Sora Variable', 'Sora', system-ui, sans-serif;
+  --body: 'Geist Variable', 'Geist', system-ui, -apple-system, sans-serif;
+  --mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* scale: 12 13 15 17 19 22 28 36 48 60 */
+  --fs-2xs: 0.75rem;
+  --fs-xs: 0.8125rem;
+  --fs-sm: 0.9375rem;
+  --fs-base: 1.0625rem;
+  --fs-md: 1.1875rem;
+  --fs-lg: 1.375rem;
+  --fs-xl: clamp(1.5rem, 1.25rem + 0.8vw, 1.75rem);
+  --fs-2xl: clamp(1.875rem, 1.4rem + 1.6vw, 2.5rem);
+  --fs-3xl: clamp(2rem, 1.45rem + 1.9vw, 2.875rem);
+  --fs-hero: clamp(2.5rem, 1.4rem + 3.8vw, 4.25rem);
+
+  /* metrics */
+  --max: 1160px;
+  --gut: clamp(20px, 4vw, 40px);
+  --gap: clamp(16px, 2vw, 28px);
+  --section: clamp(80px, 9vw, 128px);
+  --header-h: 72px;
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --pill: 999px;
+
+  /* motion */
+  --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --dur: 0.25s;
+}

@@ -1,0 +1,91 @@
+---
+const groups = [
+  {
+    title: 'Detecção e monitoramento',
+    lead: 'SIEM: quem está fazendo o quê, e quando',
+    tools: ['Google SecOps', 'Wazuh', 'IBM QRadar'],
+    text: 'Registros dos sistemas reunidos num só lugar, com regras que avisam quando algo foge do normal.',
+  },
+  {
+    title: 'Proteção de dispositivos',
+    lead: 'EDR: computadores e servidores vigiados',
+    tools: ['CrowdStrike Falcon', 'Microsoft Defender'],
+    text: 'Bloqueio de programas maliciosos e investigação do que aconteceu em cada máquina.',
+  },
+  {
+    title: 'Exposição e vulnerabilidades',
+    lead: 'O que um atacante enxerga de fora',
+    tools: ['OpenVAS', 'Nuclei', 'Qualys', 'Cloudflare'],
+    text: 'Varreduras periódicas e proteção dos sites e sistemas publicados na internet.',
+  },
+];
+---
+
+<section class="section bg-night" aria-labelledby="tools-title">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Tecnologia</span>
+      <h2 id="tools-title" class="title-3xl">Ferramentas de nível enterprise, do tamanho certo para você.</h2>
+      <p class="lead">
+        Do SIEM corporativo ao conjunto de código aberto que cabe no orçamento de uma PME. Sem empurrar licença cara que você
+        não precisa.
+      </p>
+    </div>
+    <ul class="grid" role="list">
+      {
+        groups.map((g) => (
+          <li class="card tool">
+            <p class="tool__names">{g.tools.join(' · ')}</p>
+            <span class="label">{g.lead}</span>
+            <h3>{g.title}</h3>
+            <p class="muted">{g.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="refs muted">Referências de método: CIS Controls, NIST, ISO 27001 e MITRE ATT&CK.</p>
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gap);
+    margin-top: clamp(40px, 5vw, 56px);
+  }
+  .tool {
+    padding: 28px;
+  }
+  .tool__names {
+    min-height: 3.2em;
+    margin-bottom: 18px;
+    font-family: var(--display);
+    font-size: var(--fs-lg);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    color: rgb(232 236 248 / 0.75);
+  }
+  .label {
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+  h3 {
+    margin-top: 14px;
+    font-size: var(--fs-md);
+  }
+  .tool p.muted {
+    margin-top: 8px;
+    font-size: var(--fs-sm);
+  }
+  .refs {
+    margin-top: 28px;
+    font-size: var(--fs-sm);
+  }
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

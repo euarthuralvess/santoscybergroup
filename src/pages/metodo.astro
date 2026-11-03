@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import Process from '../components/sections/Process.astro';
+import Layers from '../components/sections/Layers.astro';
+import Findings from '../components/sections/Findings.astro';
+import Deliverables from '../components/sections/Deliverables.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
+
+const crumbs = [{ name: 'Método', href: '/metodo' }];
+const principles = [
+  { title: 'Sem jargão', text: 'Cada risco explicado pelo que ele pode causar ao negócio, não pelo nome técnico.' },
+  { title: 'Sem vender medo', text: 'Mostramos o tamanho real do problema e o que resolver primeiro. Nada de alarme para vender licença.' },
+  { title: 'Escopo fixo', text: 'Você sabe o que vai receber antes de começar, e o que muda é combinado antes.' },
+  { title: 'Junto com o seu TI', text: 'Não substituímos o seu time ou fornecedor: dizemos o que fazer, eles executam, nós verificamos.' },
+  { title: 'Ferramenta do tamanho certo', text: 'Primeiro usamos o que você já tem. Quando uma compra faz sentido, explicamos o risco que ela reduz.' },
+  { title: 'Padrão internacional', text: 'O CIS Controls guia cada verificação, para que a evolução possa ser medida mês a mês.' },
+];
+---
+
+<BaseLayout
+  title="Método: como a Santos Cyber Group protege PMEs"
+  description="Raio-X, plano de ação e acompanhamento mensal pelo CIS Controls. Conheça o método e os princípios por trás de cada verificação."
+  breadcrumbs={crumbs}
+>
+  <PageHero
+    eyebrow="Método"
+    title="Monitorar, priorizar pelo impacto e responder rápido."
+    lead="A mesma disciplina de quem defende grandes operações, organizada para caber na rotina e no orçamento de uma pequena ou média empresa."
+    crumbs={crumbs}
+    seed={51}
+  />
+  <Process headingLevel="h2" />
+  <Findings />
+  <Layers />
+  <section class="section bg-night divide" aria-labelledby="pr-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Princípios</span>
+        <h2 id="pr-title" class="title-3xl">O que não muda, em nenhum cliente.</h2>
+      </div>
+      <ul class="principles" role="list">
+        {
+          principles.map((p) => (
+            <li>
+              <h3>{p.title}</h3>
+              <p>{p.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+  <Deliverables />
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 var(--gap);
+    margin-top: clamp(40px, 5vw, 56px);
+  }
+  .principles li {
+    padding: 28px 0;
+    border-top: 1px solid var(--line);
+  }
+  .principles h3 {
+    font-size: var(--fs-lg);
+  }
+  .principles p {
+    margin-top: 8px;
+    max-width: 36ch;
+    font-size: var(--fs-sm);
+    color: var(--muted);
+  }
+  @media (max-width: 900px) {
+    .principles {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

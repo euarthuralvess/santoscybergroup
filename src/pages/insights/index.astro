@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import InsightCards from '../../components/sections/InsightCards.astro';
+import CtaBand from '../../components/sections/CtaBand.astro';
+
+const crumbs = [{ name: 'Insights', href: '/insights' }];
+---
+
+<BaseLayout
+  title="Insights: segurança da informação explicada para quem decide"
+  description="Artigos sobre riscos, LGPD, CIS Controls e resposta a incidentes, escritos em linguagem de negócio para pequenas e médias empresas."
+  breadcrumbs={crumbs}
+>
+  <PageHero
+    eyebrow="Insights"
+    title="Segurança explicada para quem decide."
+    lead="Riscos, LGPD e boas práticas em linguagem de negócio, para donos e gestores de pequenas e médias empresas."
+    crumbs={crumbs}
+    seed={91}
+  />
+  <InsightCards limit={100} showHead={false} />
+  <CtaBand />
+</BaseLayout>

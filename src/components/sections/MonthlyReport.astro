@@ -1,0 +1,42 @@
+---
+import ReportSheet from '../art/ReportSheet.astro';
+---
+
+<section class="section bg-canvas-2 divide" aria-labelledby="report-title">
+  <div class="wrap grid">
+    <div>
+      <h2 id="report-title" class="title-3xl">Todo mês, um relatório de duas páginas</h2>
+      <p class="lead">
+        Sem planilha de 300 alertas. O relatório do Sentinela mostra a evolução dos controles, o que foi resolvido, o que
+        ainda está aberto e a decisão que depende da diretoria.
+      </p>
+      <ul class="checks">
+        <li>Escrito em linguagem de negócio, para quem decide</li>
+        <li>Prioridades claras para o seu TI executar no mês seguinte</li>
+        <li>Serve de evidência para clientes, auditorias e LGPD</li>
+      </ul>
+      <a class="more" href="/servicos/sentinela-pme">Conhecer o Sentinela PME</a>
+    </div>
+    <ReportSheet />
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 56px clamp(40px, 6vw, 96px);
+    align-items: center;
+  }
+  .lead {
+    margin-top: 18px;
+  }
+  .checks {
+    margin-block: 28px;
+  }
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

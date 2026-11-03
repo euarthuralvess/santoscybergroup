@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import Services from '../../components/sections/Services.astro';
+import Deliverables from '../../components/sections/Deliverables.astro';
+import Process from '../../components/sections/Process.astro';
+import Tools from '../../components/sections/Tools.astro';
+import Faq from '../../components/sections/Faq.astro';
+import CtaBand from '../../components/sections/CtaBand.astro';
+import Button from '../../components/ui/Button.astro';
+import { faq, whatsappUrl } from '../../data/site';
+import { services, serviceHref } from '../../data/services';
+
+const crumbs = [{ name: 'Serviços', href: '/servicos' }];
+const items = faq.slice(1, 4);
+---
+
+<BaseLayout
+  title="Serviços de cibersegurança para PMEs"
+  description="Raio-X de Segurança, Sentinela PME, vCISO Fracionado e Resposta a Incidentes: os quatro serviços da Santos Cyber Group para pequenas e médias empresas."
+  breadcrumbs={crumbs}
+  faq={items}
+  pageServices={services.map((s) => ({ name: s.name, description: s.summary, url: serviceHref(s) }))}
+>
+  <PageHero
+    eyebrow="Serviços"
+    title="Quatro formas de proteger o seu negócio."
+    lead="Do primeiro diagnóstico ao acompanhamento de todo mês, com uma porta à parte para quando o ataque já aconteceu. Escopo fixo, entrega clara e sem jargão."
+    crumbs={crumbs}
+    seed={11}
+  >
+    <Button href={whatsappUrl()} external>Agendar conversa gratuita</Button>
+  </PageHero>
+  <Services showHead={false} />
+  <Deliverables />
+  <Process />
+  <Tools />
+  <Faq items={items} />
+  <CtaBand />
+</BaseLayout>

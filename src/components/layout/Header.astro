@@ -1,0 +1,163 @@
+---
+import Logo from '../ui/Logo.astro';
+import { nav, whatsappUrl } from '../../data/site';
+
+interface Props {
+  path: string;
+}
+const { path } = Astro.props;
+const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`);
+---
+
+<header class="site-header" data-header>
+  <div class="wrap bar">
+    <a class="brand" href="/" aria-label="Santos Cyber Group, página inicial">
+      <Logo />
+    </a>
+
+    <nav class="primary" aria-label="Principal">
+      <ul role="list">
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <a class="btn btn--light btn--sm cta" href={whatsappUrl()} target="_blank" rel="noopener noreferrer">Agendar conversa</a>
+
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menu" data-menu-toggle>
+      <span aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <div class="menu" id="menu" hidden data-menu>
+    <nav class="wrap" aria-label="Menu">
+      <ul role="list">
+        <li><a href="/" aria-current={path === '/' ? 'page' : undefined}>Início</a></li>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        <li><a href="/contato" aria-current={path === '/contato' ? 'page' : undefined}>Contato</a></li>
+      </ul>
+      <a class="btn btn--light" href={whatsappUrl()} target="_blank" rel="noopener noreferrer">Agendar conversa pelo WhatsApp</a>
+    </nav>
+  </div>
+</header>
+
+<script src="../../scripts/header.ts"></script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgb(5 11 46 / 0.72);
+    border-bottom: 1px solid var(--line-soft);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 3vw, 36px);
+    height: var(--header-h);
+  }
+  .brand {
+    margin-right: auto;
+  }
+  .primary ul {
+    display: flex;
+    gap: clamp(18px, 2.4vw, 32px);
+  }
+  .primary a {
+    font-size: var(--fs-sm);
+    color: var(--ink-2);
+    transition: color var(--dur) var(--ease);
+  }
+  .primary a:hover,
+  .primary a[aria-current='page'] {
+    color: #fff;
+  }
+  .primary a[aria-current='page'] {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 8px;
+    text-decoration-thickness: 1.5px;
+  }
+  .menu-toggle {
+    display: none;
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--pill);
+    background: transparent;
+  }
+  .menu-toggle span,
+  .menu-toggle span::before {
+    position: absolute;
+    left: 13px;
+    width: 16px;
+    height: 1.5px;
+    background: var(--ink);
+    transition: transform var(--dur) var(--ease);
+  }
+  .menu-toggle span {
+    top: 17px;
+  }
+  .menu-toggle span::before {
+    content: '';
+    left: 0;
+    top: 7px;
+  }
+  .menu-toggle[aria-expanded='true'] span {
+    transform: translateY(3.5px) rotate(45deg);
+  }
+  .menu-toggle[aria-expanded='true'] span::before {
+    transform: translateY(-7px) rotate(-90deg);
+  }
+  .menu {
+    position: fixed;
+    inset: var(--header-h) 0 0;
+    overflow-y: auto;
+    padding-block: 24px 48px;
+    background: var(--night);
+  }
+  .menu ul {
+    margin-bottom: 32px;
+  }
+  .menu li {
+    border-bottom: 1px solid var(--line);
+  }
+  .menu li a {
+    display: block;
+    padding-block: 16px;
+    font-family: var(--display);
+    font-size: var(--fs-xl);
+    font-weight: 300;
+  }
+  .menu li a[aria-current='page'] {
+    color: var(--accent);
+  }
+  @media (max-width: 980px) {
+    .primary,
+    .cta {
+      display: none;
+    }
+    .menu-toggle {
+      display: block;
+    }
+  }
+</style>

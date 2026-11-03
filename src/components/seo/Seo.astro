@@ -1,0 +1,173 @@
+---
+/**
+ * Head metadata and one JSON-LD @graph per page, built from src/data so the
+ * markup never drifts from what the page says:
+ *   - the company (ProfessionalService) with its catalogue of services;
+ *   - the founder (Person) with credentials;
+ *   - the website, the page and its breadcrumb;
+ *   - optional Service, FAQPage and Article nodes.
+ */
+import { site, founder } from '../../data/site';
+import { services, serviceHref } from '../../data/services';
+import { indexable, type Crumb, type PageService, type PageArticle } from '../../lib/seo';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  image?: string;
+  breadcrumbs?: Crumb[];
+  faq?: { q: string; a: string }[];
+  pageServices?: PageService[];
+  article?: PageArticle;
+  noindex?: boolean;
+}
+const { title, description, path, image = '/og.png', breadcrumbs = [], faq = [], pageServices = [], article, noindex = false } = Astro.props;
+
+const base = (Astro.site?.href ?? site.url).replace(/\/+$/, '');
+const abs = (href: string) => (/^https?:/.test(href) ? href : `${base}${href === '/' ? '' : href}` || base);
+const canonical = abs(path);
+const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
+const ogImage = abs(image);
+const robots = noindex || !indexable ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1';
+
+const orgId = `${base}/#org`;
+const founderId = `${base}/#founder`;
+const sameAs = Object.values(site.social).filter(Boolean);
+
+const org = {
+  '@type': 'ProfessionalService',
+  '@id': orgId,
+  name: site.name,
+  ...(site.legalName ? { legalName: site.legalName } : {}),
+  ...(site.tradeName ? { alternateName: site.tradeName } : {}),
+  ...(site.cnpj ? { taxID: site.cnpj } : {}),
+  url: base,
+  description: site.description,
+  slogan: site.tagline,
+  logo: `${base}/icon-512.png`,
+  image: `${base}/og.png`,
+  telephone: `+${site.whatsapp}`,
+  ...(site.email ? { email: site.email } : {}),
+  address: { '@type': 'PostalAddress', addressLocality: site.city, addressRegion: site.state, addressCountry: 'BR' },
+  areaServed: { '@type': 'Country', name: site.areaServed },
+  founder: { '@id': founderId },
+  sameAs,
+  knowsAbout: ['Cibersegurança', 'Segurança da informação', 'LGPD', 'CIS Controls', 'Resposta a incidentes', 'Gestão de vulnerabilidades', 'SIEM'],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Serviços de cibersegurança',
+    itemListElement: services.map((s) => ({
+      '@type': 'Offer',
+      itemOffered: { '@type': 'Service', name: s.name, description: s.summary, url: abs(serviceHref(s)) },
+    })),
+  },
+};
+
+const person = {
+  '@type': 'Person',
+  '@id': founderId,
+  name: founder.name,
+  jobTitle: founder.role,
+  worksFor: { '@id': orgId },
+  sameAs: [site.social.linkedin, site.social.github].filter(Boolean),
+  image: `${base}/arthur.jpg`,
+  hasCredential: founder.credentials.map((c) => ({
+    '@type': 'EducationalOccupationalCredential',
+    name: c.name,
+    recognizedBy: { '@type': 'Organization', name: c.issuer },
+    dateCreated: String(c.year),
+  })),
+};
+
+const website = { '@type': 'WebSite', '@id': `${base}/#website`, url: base, name: site.name, inLanguage: site.lang, publisher: { '@id': orgId } };
+
+const crumbs: Crumb[] = [{ name: 'Início', href: '/' }, ...breadcrumbs];
+const breadcrumbList =
+  crumbs.length > 1
+    ? {
+        '@type': 'BreadcrumbList',
+        '@id': `${canonical}#breadcrumb`,
+        itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: abs(c.href) })),
+      }
+    : null;
+
+const webPage = {
+  '@type': 'WebPage',
+  '@id': `${canonical}#webpage`,
+  url: canonical,
+  name: fullTitle,
+  description,
+  inLanguage: site.lang,
+  isPartOf: { '@id': website['@id'] },
+  about: { '@id': orgId },
+  primaryImageOfPage: { '@type': 'ImageObject', url: ogImage },
+  ...(breadcrumbList ? { breadcrumb: { '@id': breadcrumbList['@id'] } } : {}),
+};
+
+const serviceNodes = pageServices.map((s) => ({
+  '@type': 'Service',
+  name: s.name,
+  description: s.description,
+  url: abs(s.url),
+  provider: { '@id': orgId },
+  areaServed: { '@type': 'Country', name: site.areaServed },
+}));
+
+const faqNode = faq.length
+  ? {
+      '@type': 'FAQPage',
+      '@id': `${canonical}#faq`,
+      mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+    }
+  : null;
+
+const articleNode = article
+  ? {
+      '@type': 'Article',
+      '@id': `${canonical}#article`,
+      headline: article.headline,
+      description: article.description,
+      datePublished: article.datePublished,
+      dateModified: article.dateModified ?? article.datePublished,
+      inLanguage: site.lang,
+      mainEntityOfPage: { '@id': webPage['@id'] },
+      author: { '@id': founderId },
+      publisher: { '@id': orgId },
+      image: ogImage,
+    }
+  : null;
+
+const graph = [org, person, website, webPage, breadcrumbList, faqNode, articleNode, ...serviceNodes].filter(Boolean);
+const ld = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c');
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="robots" content={robots} />
+<meta name="theme-color" content="#050b2e" />
+<meta name="author" content={site.name} />
+<meta name="geo.region" content={`BR-${site.state}`} />
+<meta name="geo.placename" content={site.city} />
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<link rel="alternate" type="text/plain" href="/llms.txt" title="Resumo para assistentes de IA" />
+
+<meta property="og:type" content={article ? 'article' : 'website'} />
+<meta property="og:locale" content={site.locale} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={`${site.name}: ${site.tagline}`} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<script type="application/ld+json" set:html={ld} />
