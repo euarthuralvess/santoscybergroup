@@ -42,13 +42,13 @@ export const founder = {
   shortName: 'Arthur Alves',
   role: 'Fundador e responsável técnico',
   summary:
-    'Atua no Blue Team de uma das maiores locadoras de veículos do Brasil, defendendo uma operação de grande porte todos os dias. Fundou a Santos Cyber Group para levar esse mesmo método a empresas que não podem manter um time de segurança próprio.',
+    'Atua em equipes especializadas em defesa cibernética, protegendo ambientes corporativos de grande porte todos os dias. Fundou a Santos Cyber Group para levar esse mesmo método a empresas que não podem manter um time de segurança próprio.',
   career: [
     {
       period: 'Atual',
-      org: 'Locadora de veículos de grande porte',
+      org: 'Empresa de grande porte',
       role: 'Blue Team',
-      text: 'Defesa de uma das maiores locadoras de veículos do Brasil: detecção, resposta a incidentes e inteligência de ameaças em escala corporativa.',
+      text: 'Defesa cibernética em ambiente corporativo: monitoramento de ameaças, detecção de ataques e resposta a incidentes.',
     },
     {
       period: '2020–2023',
