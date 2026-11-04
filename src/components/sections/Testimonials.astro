@@ -1,91 +1,130 @@
 ---
+/** Client testimonials as equal cards: two columns on desktop, stacked on mobile. */
 import { testimonials } from '../../data/site';
-const [main, ...rest] = testimonials;
+
+const initials = (name: string) =>
+  name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join('');
 ---
 
 <section class="section bg-canvas divide" aria-labelledby="t-title">
-  <div class="wrap grid">
-    <div class="main">
+  <div class="wrap">
+    <header class="section-head">
+      <span class="eyebrow">Depoimentos</span>
       <h2 class="title-2xl" id="t-title">O que dizem os clientes</h2>
-      <svg class="quote-mark" viewBox="0 0 32 24" aria-hidden="true"><path d="M0 24V14C0 6 4 1.5 12 0l1.5 3C9 4.5 7 7.5 7 11h6v13H0Zm19 0V14c0-8 4-12.5 12-14l1.5 3C28 4.5 26 7.5 26 11h6v13H19Z" /></svg>
-      <figure>
-        <blockquote>
-          <p>{main.quote}</p>
-        </blockquote>
-        <figcaption>
-          <span>
-            <strong>{main.name}</strong>
-            <span class="muted">{[main.role, main.company].filter(Boolean).join(', ')}</span>
-          </span>
-        </figcaption>
-      </figure>
-    </div>
-    <div class="side">
+      <p class="lead">Atendimento remoto, com clientes no Brasil e em Portugal.</p>
+    </header>
+
+    <ul class="cards" role="list">
       {
-        rest.map((t) => (
-          <figure>
-            <blockquote>
-              <p>{t.quote}</p>
-            </blockquote>
-            <figcaption>
-              <span>
-                <strong>{t.name}</strong>
-                <span class="muted">{[t.role, t.company].filter(Boolean).join(', ')}</span>
-              </span>
-            </figcaption>
-          </figure>
+        testimonials.map((t) => (
+          <li>
+            <figure class="card">
+              <svg class="quote-mark" viewBox="0 0 32 24" aria-hidden="true">
+                <path d="M0 24V14C0 6 4 1.5 12 0l1.5 3C9 4.5 7 7.5 7 11h6v13H0Zm19 0V14c0-8 4-12.5 12-14l1.5 3C28 4.5 26 7.5 26 11h6v13H19Z" />
+              </svg>
+              <blockquote>
+                <p>{t.quote}</p>
+              </blockquote>
+              <figcaption>
+                <span class="avatar" aria-hidden="true">{initials(t.name)}</span>
+                <span class="who">
+                  <strong>{t.name}</strong>
+                  <span class="muted">
+                    {t.role && `${t.role} · `}
+                    <span class="nowrap">{t.company}</span>
+                  </span>
+                </span>
+              </figcaption>
+            </figure>
+          </li>
         ))
       }
-      <p class="muted small">Atendimento remoto, com clientes no Brasil e em Portugal.</p>
-    </div>
+    </ul>
   </div>
 </section>
 
 <style>
-  .grid {
+  .section-head .lead {
+    margin-top: 14px;
+    font-size: var(--fs-base);
+  }
+  .cards {
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-    gap: 48px clamp(40px, 7vw, 112px);
-    align-items: start;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+    gap: var(--gap);
+    margin-top: clamp(36px, 4vw, 56px);
+  }
+  .cards li {
+    display: flex;
+  }
+  figure {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: clamp(24px, 3vw, 36px);
+    transition: border-color var(--dur) var(--ease);
+  }
+  figure:hover {
+    border-color: var(--line-strong);
   }
   .quote-mark {
-    width: 30px;
-    margin: 18px 0 28px;
+    width: 26px;
+    height: auto;
     fill: var(--accent);
+    opacity: 0.9;
   }
-  .main blockquote {
-    font-family: var(--display);
-    font-size: clamp(1.375rem, 1.1rem + 0.9vw, 1.875rem);
-    font-weight: 300;
-    line-height: 1.38;
-    letter-spacing: -0.015em;
+  blockquote {
+    margin-top: 20px;
+    font-size: var(--fs-md);
+    line-height: 1.6;
+    color: var(--ink);
+    text-wrap: pretty;
+    flex: 1;
   }
   figcaption {
     display: flex;
     align-items: center;
     gap: 14px;
-    margin-top: 24px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
   }
-  figcaption > span:last-child {
+  .avatar {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--accent-tint);
+    border: 1px solid rgb(120 180 255 / 0.3);
+    font-family: var(--display);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--accent);
+  }
+  .who {
     display: flex;
     flex-direction: column;
+    gap: 2px;
     font-size: var(--fs-sm);
+    line-height: 1.35;
   }
-  .side figure {
-    padding-block: 28px;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
+  .nowrap {
+    white-space: nowrap;
   }
-  .side blockquote {
-    color: var(--ink-2);
+  .who strong {
+    font-weight: 600;
+    color: var(--ink);
   }
-  .small {
-    margin-top: 24px;
-    font-size: var(--fs-sm);
-  }
-  @media (max-width: 900px) {
-    .grid {
-      grid-template-columns: 1fr;
+  @media (max-width: 560px) {
+    blockquote {
+      font-size: var(--fs-base);
     }
   }
 </style>
