@@ -25,8 +25,8 @@ export const site = {
   whatsapp: '5584999316830',
   whatsappDisplay: '(84) 99931-6830',
   whatsappGreeting: 'Olá, quero agendar uma conversa sobre a segurança da minha empresa.',
-  email: '', // e-mail comercial — a informar
-  securityEmail: '', // para security.txt (ex.: seguranca@...) — a informar
+  email: 'arthur@santoscybergroup.com.br',
+  securityEmail: 'arthur@santoscybergroup.com.br', // security.txt
   social: {
     linkedin: 'https://www.linkedin.com/in/euarthuralvess',
     telegram: 'https://t.me/euarthuralvess',
