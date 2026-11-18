@@ -26,6 +26,7 @@ ${sectors.map((s) => `- [${s.name}](${base}/setores/${s.slug}): ${s.stake}`).joi
 ## Páginas
 
 - [Método](${base}/metodo): Raio-X, plano de ação e acompanhamento mensal pelo CIS Controls
+- [Diagnóstico gratuito](${base}/diagnostico): questionário sem jargão que mede a maturidade e o risco de segurança da empresa e indica por onde começar
 - [Sobre](${base}/sobre): fundador, trajetória, treinamentos e palestras
 - [Contato](${base}/contato)
 ${posts.map((p) => `- [${p.data.title}](${base}/insights/${p.id}): ${p.data.description}`).join('\n')}

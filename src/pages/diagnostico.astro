@@ -1,0 +1,665 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import { site } from '../data/site';
+import { sectors } from '../data/sectors';
+import { contextQuestions, domains, allQuestions, type Question } from '../data/diagnostic';
+
+const crumbs = [{ name: 'Diagnóstico', href: '/diagnostico' }];
+const total = allQuestions().length;
+const steps: { id: string; name: string; intro: string; questions: Question[] }[] = [
+  { id: 'empresa', name: 'Sobre a empresa', intro: 'Para medir o impacto que um ataque teria no seu negócio.', questions: contextQuestions },
+  ...domains,
+];
+const faq = [
+  {
+    q: 'O diagnóstico guarda as minhas respostas?',
+    a: 'Não. O cálculo é feito no seu navegador e nada é enviado para o site. Você decide se envia o resultado para nós pelo WhatsApp.',
+  },
+  {
+    q: 'O diagnóstico substitui o Raio-X de Segurança?',
+    a: 'Não. O diagnóstico mostra o que a empresa acredita ter. O Raio-X verifica com evidências o que de fato está exposto.',
+  },
+];
+---
+
+<BaseLayout
+  title="Diagnóstico gratuito de maturidade e risco em segurança"
+  description={`Responda ${total} perguntas sem jargão e descubra o nível de maturidade e o risco de segurança da sua empresa, com o que fazer esta semana e por onde começar.`}
+  breadcrumbs={crumbs}
+  faq={faq}
+>
+  <PageHero
+    eyebrow="Diagnóstico gratuito"
+    title="Qual o nível de segurança da sua empresa?"
+    lead={`${total} perguntas, cerca de 5 minutos, sem termos técnicos. No final você recebe o nível de maturidade, o risco, o que fazer esta semana e por onde começar.`}
+    crumbs={crumbs}
+    seed={93}
+  />
+
+  <section class="section bg-canvas diag" aria-label="Questionário">
+    <div class="wrap">
+      <form class="card quiz" data-diag-form novalidate>
+        <div class="progress" data-diag-progress hidden>
+          <div class="progress__meta">
+            <span class="label" data-diag-step-label></span>
+            <span class="label" data-diag-step-count></span>
+          </div>
+          <div class="progress__bar" aria-hidden="true"><span data-diag-bar></span></div>
+        </div>
+
+        <p class="hint muted">
+          Responda pensando em como a empresa funciona hoje, não em como deveria funcionar. Se não souber, marque “Não sei”: isso
+          também é uma resposta. Nada é armazenado neste site.
+        </p>
+
+        {
+          steps.map((step, i) => (
+            <div class="step" data-step={i} data-step-name={step.name}>
+              <header class="step__head">
+                <span class="eyebrow">{i === 0 ? 'Contexto' : `Camada ${i} de ${domains.length}`}</span>
+                <h2 class="title-2xl">{step.name}</h2>
+                <p class="muted">{step.intro}</p>
+              </header>
+
+              {i === 0 && (
+                <label class="sector">
+                  <span>Setor da empresa</span>
+                  <select name="setor">
+                    <option value="">Selecione</option>
+                    {sectors.map((s) => (
+                      <option value={s.slug}>{s.name}</option>
+                    ))}
+                    <option value="outro">Outro</option>
+                  </select>
+                </label>
+              )}
+
+              {step.questions.map((q) => (
+                <fieldset class="q" data-q={q.id}>
+                  <legend>{q.text}</legend>
+                  {q.help && <p class="q__help muted">{q.help}</p>}
+                  <div class="opts">
+                    {q.options.map((o, oi) => (
+                      <label class:list={['opt', o.label === 'Não sei' && 'opt--unknown']}>
+                        <input type="radio" name={q.id} value={oi} required />
+                        <span>{o.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
+              ))}
+            </div>
+          ))
+        }
+
+        <p class="error" role="alert" data-diag-error hidden>Responda todas as perguntas desta etapa para continuar.</p>
+
+        <div class="nav">
+          <button class="btn btn--outline" type="button" data-diag-back hidden>Voltar</button>
+          <button class="btn btn--light" type="submit" data-diag-next>Ver meu diagnóstico</button>
+        </div>
+        <noscript><p class="muted">O diagnóstico precisa de JavaScript ativado para calcular o resultado.</p></noscript>
+      </form>
+
+      <article class="result" data-diag-result hidden aria-labelledby="res-title">
+        <header class="result__head">
+          <span class="eyebrow">Resultado</span>
+          <h2 id="res-title" class="title-3xl" tabindex="-1">Seu diagnóstico de segurança</h2>
+          <p class="muted"><span data-r-date></span> · Autoavaliação feita no site da {site.name}</p>
+        </header>
+
+        <div class="card urgent" data-r-urgent hidden>
+          <h3>O incidente ainda está acontecendo: fale conosco agora.</h3>
+          <p>
+            Não desligue nem formate os computadores afetados, porque isso apaga evidências. Desconecte da rede o que estiver
+            comprometido e troque as senhas administrativas a partir de um aparelho limpo.
+          </p>
+          <a class="btn btn--light" data-r-urgent-link target="_blank" rel="noopener noreferrer">Pedir ajuda pelo WhatsApp</a>
+        </div>
+
+        <div class="tiles">
+          <div class="card tile">
+            <span class="label">Maturidade</span>
+            <p class="tile__value"><strong data-r-maturity></strong><span>/100</span></p>
+            <p class="tile__level" data-r-maturity-level></p>
+            <p class="muted" data-r-maturity-text></p>
+            <ol class="scale" role="list" aria-label="Escala de maturidade" data-r-scale></ol>
+          </div>
+          <div class="card tile" data-r-risk-tile>
+            <span class="label">Risco</span>
+            <p class="tile__value"><strong data-r-risk-level></strong></p>
+            <p class="tile__level"><span data-r-risk></span>/100 · exposição do negócio <span data-r-exposure></span>/100</p>
+            <p class="muted" data-r-risk-text></p>
+          </div>
+        </div>
+
+        <section class="card block" aria-labelledby="dom-title">
+          <h3 id="dom-title">Maturidade por camada</h3>
+          <ul class="bars" role="list" data-r-domains></ul>
+          <p class="muted small" data-r-unknown hidden></p>
+        </section>
+
+        <section class="card block" aria-labelledby="crit-title" data-r-crit-block>
+          <h3 id="crit-title">Lacunas críticas</h3>
+          <p class="muted small">Respostas que costumam aparecer antes de um ataque real. Cada uma soma pontos ao risco.</p>
+          <ul class="crit" role="list" data-r-criticals></ul>
+        </section>
+
+        <section class="card block" aria-labelledby="qw-title">
+          <h3 id="qw-title">O que fazer esta semana</h3>
+          <p class="muted small">Ações de baixo custo que o seu TI consegue começar já, em ordem de prioridade.</p>
+          <ol class="wins" role="list" data-r-wins></ol>
+        </section>
+
+        <section class="block path" aria-labelledby="path-title">
+          <h3 id="path-title" class="title-2xl">Caminho recomendado</h3>
+          <p class="muted">Como a {site.name} pode ajudar, na ordem em que faz sentido começar.</p>
+          <ol class="services" role="list" data-r-services></ol>
+        </section>
+
+        <section class="card block send" aria-labelledby="send-title">
+          <h3 id="send-title">Receber a análise de um especialista</h3>
+          <p class="muted small">
+            Envie o resultado pelo WhatsApp e marcamos uma conversa gratuita para revisar o diagnóstico com você. A mensagem é
+            montada no seu aparelho e você decide se envia.
+          </p>
+          <form class="send__form" data-diag-send novalidate>
+            <label>
+              <span>Seu nome</span>
+              <input name="nome" autocomplete="name" required />
+            </label>
+            <label>
+              <span>Empresa</span>
+              <input name="empresa" autocomplete="organization" required />
+            </label>
+            <p class="error full" role="alert" data-send-error hidden>Preencha seu nome e o nome da empresa para continuar.</p>
+            <div class="send__actions full">
+              <button class="btn btn--light" type="submit">Enviar pelo WhatsApp</button>
+              <button class="btn btn--outline" type="button" data-diag-print>Salvar em PDF</button>
+              <button class="btn btn--outline" type="button" data-diag-restart>Refazer o diagnóstico</button>
+            </div>
+          </form>
+        </section>
+
+        <p class="muted small disclaimer">
+          Este resultado é uma autoavaliação baseada nas suas respostas e nos controles essenciais do CIS Controls. Ele não
+          substitui uma verificação técnica: só o Raio-X de Segurança confirma o que de fato está exposto.
+        </p>
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<script src="../scripts/diagnostic.ts"></script>
+
+<style>
+  .diag .wrap {
+    max-width: calc(880px + 2 * var(--gut));
+  }
+  .quiz {
+    padding: clamp(24px, 4vw, 48px);
+    scroll-margin-top: calc(var(--header-h) + 16px);
+  }
+  .hint {
+    font-size: var(--fs-sm);
+  }
+  .progress + .hint {
+    margin-top: 20px;
+  }
+  .progress__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .progress__bar {
+    height: 4px;
+    margin-top: 10px;
+    border-radius: var(--pill);
+    background: var(--line);
+    overflow: hidden;
+  }
+  .progress__bar span {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--brand);
+    transition: width var(--dur) var(--ease);
+  }
+  .step {
+    margin-top: 40px;
+  }
+  .step + .step {
+    padding-top: 40px;
+    border-top: 1px solid var(--line);
+  }
+  /* Only when the script runs: one step at a time. */
+  .quiz[data-ready] .step {
+    padding-top: 0;
+    border-top: 0;
+  }
+  .quiz[data-ready] .step:not([data-current]) {
+    display: none;
+  }
+  .step__head p {
+    margin-top: 8px;
+  }
+  .sector {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 32px;
+    max-width: 420px;
+    font-size: var(--fs-sm);
+    color: var(--ink-2);
+  }
+  select,
+  input {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-sm);
+    background: var(--canvas);
+    color: var(--ink);
+    font-size: var(--fs-base);
+  }
+  select:focus,
+  input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgb(120 180 255 / 0.18);
+  }
+  input[aria-invalid='true'] {
+    border-color: var(--danger);
+  }
+  .q {
+    margin-top: 32px;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+  .q legend {
+    padding: 0;
+    font-family: var(--display);
+    font-size: var(--fs-md);
+    line-height: 1.35;
+    color: var(--ink);
+  }
+  .q__help {
+    margin-top: 6px;
+    font-size: var(--fs-sm);
+  }
+  .opts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .opt {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-sm);
+    background: var(--canvas);
+    font-size: var(--fs-sm);
+    color: var(--ink-2);
+    cursor: pointer;
+    transition:
+      border-color var(--dur) var(--ease),
+      background-color var(--dur) var(--ease);
+  }
+  .opt:hover {
+    border-color: var(--accent);
+  }
+  .opt:has(input:checked) {
+    border-color: var(--accent);
+    background: var(--accent-tint);
+    color: var(--ink);
+  }
+  .opt:has(input:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .opt input {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    padding: 0;
+    accent-color: var(--brand);
+  }
+  .opt--unknown {
+    border-style: dashed;
+  }
+  .q[aria-invalid='true'] legend {
+    color: var(--danger);
+  }
+  .q[aria-invalid='true'] .opt {
+    border-color: rgb(255 122 136 / 0.45);
+  }
+  .error {
+    margin-top: 24px;
+    color: var(--danger);
+    font-size: var(--fs-sm);
+  }
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .nav [data-diag-next] {
+    margin-left: auto;
+  }
+
+  /* ---------- result ---------- */
+  .result {
+    display: grid;
+    gap: var(--gap);
+  }
+  .result[hidden] {
+    display: none;
+  }
+  .result__head p {
+    margin-top: 10px;
+    font-size: var(--fs-sm);
+  }
+  .result__head h2:focus {
+    outline: none;
+  }
+  .small {
+    font-size: var(--fs-sm);
+  }
+  .urgent {
+    padding: 28px;
+    border-color: rgb(255 122 136 / 0.5);
+    background: linear-gradient(180deg, var(--danger-tint), #1a1023);
+  }
+  .urgent h3 {
+    font-size: var(--fs-lg);
+    color: var(--danger);
+  }
+  .urgent p {
+    margin-block: 10px 20px;
+    color: var(--ink-2);
+  }
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap);
+  }
+  .tile {
+    padding: 28px;
+  }
+  .tile__value {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-top: 8px;
+    font-family: var(--display);
+  }
+  .tile__value strong {
+    font-size: var(--fs-3xl);
+    font-weight: 400;
+  }
+  .tile__value span {
+    color: var(--muted);
+  }
+  .tile__level {
+    margin-block: 4px 12px;
+    font-weight: 500;
+    color: var(--accent);
+  }
+  .tile .muted {
+    font-size: var(--fs-sm);
+  }
+  .tile[data-tone='ok'] .tile__value strong {
+    color: var(--ok);
+  }
+  .tile[data-tone='alert'] .tile__value strong {
+    color: var(--alert);
+  }
+  .tile[data-tone='danger'] .tile__value strong {
+    color: var(--danger);
+  }
+  .scale {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    margin-top: 20px;
+  }
+  .scale :global(li) {
+    padding-top: 8px;
+    border-top: 3px solid var(--line);
+    font-size: var(--fs-2xs);
+    color: var(--faint);
+  }
+  .scale :global(li[data-on]) {
+    border-color: var(--brand);
+    color: var(--ink-2);
+  }
+  .scale :global(li[data-current]) {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .block {
+    padding: 28px;
+  }
+  .block h3 {
+    font-size: var(--fs-lg);
+  }
+  .block > .muted {
+    margin-top: 6px;
+  }
+  .bars {
+    display: grid;
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .bars :global(.bar__meta) {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: var(--fs-sm);
+    color: var(--ink-2);
+  }
+  .bars :global(.bar__track) {
+    height: 8px;
+    margin-top: 8px;
+    border-radius: var(--pill);
+    background: var(--line);
+    overflow: hidden;
+  }
+  .bars :global(.bar__fill) {
+    display: block;
+    height: 100%;
+    border-radius: var(--pill);
+    background: var(--brand);
+  }
+  .bars :global(.bar__fill[data-tone='danger']) {
+    background: var(--danger);
+  }
+  .bars :global(.bar__fill[data-tone='alert']) {
+    background: var(--alert);
+  }
+  .bars :global(.bar__fill[data-tone='ok']) {
+    background: var(--ok);
+  }
+  [data-r-unknown] {
+    margin-top: 16px;
+  }
+  .crit,
+  .wins {
+    display: grid;
+    gap: 14px;
+    margin-top: 20px;
+  }
+  .crit :global(li) {
+    padding: 14px 16px;
+    border-left: 3px solid var(--danger);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    background: rgb(255 122 136 / 0.06);
+  }
+  .crit :global(strong),
+  .wins :global(strong) {
+    display: block;
+  }
+  .crit :global(span),
+  .wins :global(span) {
+    display: block;
+    margin-top: 4px;
+    font-size: var(--fs-sm);
+    color: var(--muted);
+  }
+  .wins {
+    counter-reset: win;
+  }
+  .wins :global(li) {
+    position: relative;
+    padding-left: 44px;
+    counter-increment: win;
+  }
+  .wins :global(li)::before {
+    content: counter(win);
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--accent-tint);
+    color: var(--accent);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+  .wins :global(em) {
+    font-style: normal;
+    color: var(--danger);
+  }
+  .path {
+    padding: 28px 0 0;
+  }
+  .services {
+    display: grid;
+    gap: var(--gap);
+    margin-top: 24px;
+  }
+  .services :global(li) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 4px 20px;
+    padding: 24px;
+    background: linear-gradient(180deg, var(--surface), #0e1530);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+  }
+  .services :global(li[data-urgent]) {
+    border-color: rgb(255 122 136 / 0.5);
+  }
+  .services :global(.svc__n) {
+    grid-row: span 4;
+    font-family: var(--display);
+    font-size: var(--fs-2xl);
+    font-weight: 300;
+    color: var(--accent);
+  }
+  .services :global(.svc__format) {
+    font-size: var(--fs-xs);
+    color: var(--muted);
+  }
+  .services :global(h4) {
+    font-family: var(--display);
+    font-size: var(--fs-lg);
+    font-weight: 400;
+  }
+  .services :global(p) {
+    font-size: var(--fs-sm);
+    color: var(--ink-2);
+  }
+  .services :global(.more) {
+    margin-top: 8px;
+    font-size: var(--fs-sm);
+  }
+  .send__form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .send__form label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: var(--fs-sm);
+    color: var(--ink-2);
+  }
+  .send__form .error {
+    margin: 0;
+  }
+  .full {
+    grid-column: 1 / -1;
+  }
+  .send__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .disclaimer {
+    max-width: 70ch;
+  }
+
+  @media (max-width: 720px) {
+    .opts,
+    .tiles,
+    .send__form {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ---------- print / PDF: the result only, dark text on white ---------- */
+  @media print {
+    :global(.site-header),
+    :global(.site-footer),
+    :global(.wa),
+    :global(.page-hero),
+    :global(.skip-link),
+    .quiz,
+    .send,
+    .urgent a {
+      display: none !important;
+    }
+    :global(html),
+    :global(body),
+    .diag {
+      background: #fff !important;
+      color: #111 !important;
+    }
+    .diag {
+      padding: 0;
+    }
+    .result :global(*) {
+      color: #111 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+    .result .card,
+    .services :global(li) {
+      border-color: #ccc !important;
+      break-inside: avoid;
+    }
+    .bars :global(.bar__track) {
+      background: #e5e5e5 !important;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+    .bars :global(.bar__fill) {
+      background: #2f6fe4 !important;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+  }
+</style>

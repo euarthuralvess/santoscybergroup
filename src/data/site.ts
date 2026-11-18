@@ -187,6 +187,7 @@ export const nav = [
   { label: 'Serviços', href: '/servicos' },
   { label: 'Setores', href: '/setores' },
   { label: 'Método', href: '/metodo' },
+  { label: 'Diagnóstico', href: '/diagnostico' },
   { label: 'Sobre', href: '/sobre' },
   { label: 'Insights', href: '/insights' },
 ];

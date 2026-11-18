@@ -21,7 +21,7 @@ export default defineConfig({
       filter: (page) => !page.includes('/404'),
       serialize(item) {
         const path = new URL(item.url).pathname.replace(/\/$/, '') || '/';
-        const top = { '/': 1.0, '/servicos': 0.9, '/contato': 0.8, '/metodo': 0.7, '/sobre': 0.7, '/setores': 0.7 };
+        const top = { '/': 1.0, '/servicos': 0.9, '/contato': 0.8, '/diagnostico': 0.8,'/metodo': 0.7, '/sobre': 0.7, '/setores': 0.7 };
         /** @type {number} */
         let priority = 0.5;
         if (path in top) priority = top[/** @type {keyof typeof top} */ (path)];
